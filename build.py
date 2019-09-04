@@ -1,0 +1,56 @@
+#  dda-devops-build
+#  Copyright 2019 meissa GmbH.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+"""
+dda-devops-build
+
+tools to support builds combining gopass, terraform, dda-pallet, aws & hetzner-cloud
+"""
+
+from pybuilder.core import init, use_plugin, Author
+
+use_plugin("python.core")
+#use_plugin("python.unittest")
+#use_plugin("python.coverage")
+use_plugin("python.distutils")
+
+use_plugin("python.install_dependencies")
+
+default_task = "publish"
+
+name = 'dda-devops-build'
+version = "0.1.0"
+summary = "tools to support builds combining gopass, terraform, dda-pallet, aws & hetzner-cloud"
+description = __doc__
+authors = [Author("meissa GmbH", "buero@meissa-gmbh.de")]
+url = "https://github.com/DomainDrivenArchitecture/dda-devops-build"
+license = "Apache Software License"
+
+@init
+def initialize(project):
+    #project.build_depends_on('mockito')
+    #project.build_depends_on('unittest-xml-reporting')
+
+    project.set_property("dir_source_unittest_python", "src/unittest/python")
+
+    #project.set_property('distutils_upload_sign', True)
+    #project.set_property('distutils_upload_sign_identity', '')
+    project.set_property('distutils_readme_file', 'README.md')    
+    project.set_property("distutils_classifiers", [
+        'License :: OSI Approved :: Apache Software License',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.7',])

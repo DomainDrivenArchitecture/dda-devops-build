@@ -25,8 +25,8 @@ use_plugin("python.install_dependencies")
 
 default_task = "publish"
 
-name = 'dda-devops-build'
-version = "0.1.1"
+name = 'dda_devops_build'
+version = "0.1.4"
 summary = "tools to support builds combining gopass, terraform, dda-pallet, aws & hetzner-cloud"
 description = __doc__
 authors = [Author("meissa GmbH", "buero@meissa-gmbh.de")]

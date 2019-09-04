@@ -13,11 +13,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-"""
-dda-devops-build
-
-tools to support builds combining gopass, terraform, dda-pallet, aws & hetzner-cloud
-"""
 
 from pybuilder.core import init, use_plugin, Author
 

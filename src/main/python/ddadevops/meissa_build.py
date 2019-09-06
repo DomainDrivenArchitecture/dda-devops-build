@@ -1,12 +1,12 @@
-import credential
 import os
+from .credential import gopass_credential_from_env_path
 
 def init_project(project):
     project.set_property('stage', os.environ.get('STAGE', 'intergation'))
     project.set_property('http_net_api_key', 
-        credential.gopass_credential_from_env_path('HTTP_NET_API_KEY_PATH'))
+        gopass_credential_from_env_path('HTTP_NET_API_KEY_PATH'))
     project.set_property('hetzner_api_key', 
-        credential.gopass_credential_from_env_path('HETZNER_API_KEY_PATH'))
+        gopass_credential_from_env_path('HETZNER_API_KEY_PATH'))
     
 def hetzner_api_key(project):
    return project.get_property('hetzner_api_key')

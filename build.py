@@ -1,4 +1,4 @@
-#  dda-devops-build
+#  dda_devops_build
 #  Copyright 2019 meissa GmbH.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,16 +17,17 @@
 from pybuilder.core import init, use_plugin, Author
 
 use_plugin("python.core")
+use_plugin("filter_resources")
 #use_plugin("python.unittest")
 #use_plugin("python.coverage")
 use_plugin("python.distutils")
 
-use_plugin("python.install_dependencies")
+#use_plugin("python.install_dependencies")
 
 default_task = "publish"
 
-name = 'dda_devops_build'
-version = "0.1.4"
+name = "ddadevops"
+version = "0.1.13"
 summary = "tools to support builds combining gopass, terraform, dda-pallet, aws & hetzner-cloud"
 description = __doc__
 authors = [Author("meissa GmbH", "buero@meissa-gmbh.de")]
@@ -38,14 +39,19 @@ def initialize(project):
     #project.build_depends_on('mockito')
     #project.build_depends_on('unittest-xml-reporting')
 
-    project.set_property("dir_source_unittest_python", "src/unittest/python")
-
+    project.set_property("verbose", True)
+    project.get_property("filter_resources_glob").append("**/ddadevops/__init__.py")
+    #project.set_property("dir_source_unittest_python", "src/unittest/python")
+    
     #project.set_property('distutils_upload_sign', True)
     #project.set_property('distutils_upload_sign_identity', '')
-    project.set_property('distutils_readme_file', 'README.md')    
+    project.set_property("distutils_readme_description", True)
+    project.set_property("distutils_description_overwrite", True)
     project.set_property("distutils_classifiers", [
         'License :: OSI Approved :: Apache Software License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.7',])
+        'Programming Language :: Python :: 3.7',
+        'Topic :: Software Development :: Build Tools',
+        ])

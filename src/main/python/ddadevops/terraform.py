@@ -1,8 +1,9 @@
-from subprocess import check_output, call, Popen, PIPE
 import os
 import sys
 import json
-import meissa_build
+
+from subprocess import check_output, call, Popen, PIPE
+from .meissa_build import stage, hetzner_api_key, tf_import_name, tf_import_resource
 
 APPLY_PLAN = "proposed_apply.plan"
 DESTROY_PLAN = "proposed_destroy.plan"
@@ -43,9 +44,9 @@ def terraform(cmd, credentials=None, options=None):
 def init(project):
     terraform(TF_INIT_CMD) 
     try:
-        terraform(TF_SELECT_WORKSPACE_CMD, None, [meissa_build.stage(project)])
+        terraform(TF_SELECT_WORKSPACE_CMD, None, [stage(project)])
     except:
-        terraform(TF_NEW_WORKSPACE_CMD, None, [meissa_build.stage(project)])
+        terraform(TF_NEW_WORKSPACE_CMD, None, [stage(project)])
 
 def write_output():
     output = terraform(TF_OUTPUT_CMD)
@@ -57,10 +58,10 @@ def read_output_json():
         return json.load(f)
 
 def get_hetzner_api_key_as_var(project):
-    hetzner_api_key = meissa_build.hetzner_api_key(project)
+    my_hetzner_api_key = hetzner_api_key(project)
     ret = []
-    if hetzner_api_key:
-        ret.extend(['-var', 'hetzner_api_key=' + hetzner_api_key])
+    if my_hetzner_api_key:
+        ret.extend(['-var', 'hetzner_api_key=' + my_hetzner_api_key])
     return ret
 
 def plan_apply(project):
@@ -69,7 +70,7 @@ def plan_apply(project):
 
 def tf_import(project):
     init(project)
-    terraform(TF_IMPORT_CMD, get_hetzner_api_key_as_var(project), [meissa_build.tf_import_name(project), meissa_build.tf_import_resource(project)])
+    terraform(TF_IMPORT_CMD, get_hetzner_api_key_as_var(project), [tf_import_name(project), tf_import_resource(project)])
 
 def plan_destroy(project):
     init(project)

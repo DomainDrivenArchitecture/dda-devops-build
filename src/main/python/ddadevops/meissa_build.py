@@ -1,7 +1,7 @@
 import os
 from .credential import gopass_credential_from_env_path
 
-def init_project(project):
+def meissa_init_project(project):
     project.set_property('stage', os.environ.get('STAGE', 'intergation'))
     project.set_property('http_net_api_key', 
         gopass_credential_from_env_path('HTTP_NET_API_KEY_PATH'))

@@ -3,6 +3,7 @@ from json import load
 from subprocess import call
 from .meissa_build import stage, hetzner_api_key, tf_import_name, tf_import_resource
 from .python_util import execute
+from python_terraform import *
 
 APPLY_PLAN = "proposed_apply.plan"
 DESTROY_PLAN = "proposed_destroy.plan"
@@ -22,41 +23,35 @@ def tf_copy_common(base_path):
     call(['cp', '-f', base_path + '00_build_common/terraform/aws_provider.tf', 'aws_provider.tf'])
     call(['cp', '-f', base_path + '00_build_common/terraform/variables.tf', 'variables.tf'])
 
-def tf_plan_apply(project):
+def tf_plan(project):
     init(project)
-    terraform(TF_PLAN_CMD, get_hetzner_api_key_as_var(project), ['-out', APPLY_PLAN])
+    tf = Terraform(working_dir='.')
+    tf.plan(capture_output=False, var=get_hetzner_api_key_as_dict(project))
 
 def tf_import(project):
     init(project)
     terraform(TF_IMPORT_CMD, get_hetzner_api_key_as_var(project), [tf_import_name(project), tf_import_resource(project)])
 
 def tf_apply(project, auto_approve=None):
-    if not path.isfile(APPLY_PLAN):
-        tf_plan_apply(project)
-    else:
-        init(project)
+    init(project)
     cmd = []
+    tf = Terraform(working_dir='.')
     if auto_approve:
-        cmd.extend(['-auto-approve', '-input=false'])
-    cmd.append(APPLY_PLAN)
-    terraform(TF_APPLY_CMD, None, cmd)
-    write_output()
+        tf.apply(capture_output=False, auto_approve=True, var=get_hetzner_api_key_as_dict(project))
+    else:
+        tf.apply(capture_output=False, var=get_hetzner_api_key_as_dict(project))
+    tf.output(json=IsFlagged)
     
 def tf_destroy(project, auto_approve=None):
-    cmd = []
+    tf = Terraform(working_dir='.')
     if auto_approve:
-        cmd.extend(['-auto-approve', '-input=false'])
-    terraform(TF_DESTROY_CMD, get_hetzner_api_key_as_var(project), cmd)
-    write_output()
+        tf.destroy(capture_output=False, auto_approve=True, var=get_hetzner_api_key_as_dict(project))
+    else:
+        tf.destroy(capture_output=False, var=get_hetzner_api_key_as_dict(project))
 
 def tf_read_output_json():
     with open(OUTPUT_JSON, 'r') as f:
         return load(f)
-
-def write_output():
-    output = terraform(TF_OUTPUT_CMD)
-    with open(OUTPUT_JSON, "w") as output_file:
-        output_file.write(output)
 
 def terraform(cmd, credentials=None, options=None):
     tf_cmd = ['terraform']
@@ -73,16 +68,24 @@ def terraform(cmd, credentials=None, options=None):
     return output
 
 def init(project):
-    terraform(TF_INIT_CMD) 
+    tf = Terraform(working_dir='.')
+    tf.init()
     try:
-        terraform(TF_SELECT_WORKSPACE_CMD, None, [stage(project)])
+        tf.workspace('select', stage(project))
     except:
-        terraform(TF_NEW_WORKSPACE_CMD, None, [stage(project)])
+        tf.workspace('new', stage(project))
 
 def get_hetzner_api_key_as_var(project):
     my_hetzner_api_key = hetzner_api_key(project)
     ret = []
     if my_hetzner_api_key:
         ret.extend(['-var', 'hetzner_api_key=' + my_hetzner_api_key])
+    return ret
+
+def get_hetzner_api_key_as_dict(project):
+    my_hetzner_api_key = hetzner_api_key(project)
+    ret = {}
+    if my_hetzner_api_key:
+        ret['hetzner_api_key'] = my_hetzner_api_key
     return ret
 

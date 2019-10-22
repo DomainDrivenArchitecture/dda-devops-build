@@ -34,13 +34,18 @@ def tf_import(project):
 
 def tf_apply(project, auto_approve=None):
     init(project)
-    cmd = []
     tf = Terraform(working_dir='.')
     if auto_approve:
         tf.apply(capture_output=False, auto_approve=True, var=get_hetzner_api_key_as_dict(project))
     else:
         tf.apply(capture_output=False, var=get_hetzner_api_key_as_dict(project))
-    tf.output(json=IsFlagged)
+    tf_output(project)
+
+def tf_output(project):
+    tf = Terraform(working_dir='.')
+    result = tf.output(json=IsFlagged)
+    with open(OUTPUT_JSON, "w") as output_file:
+        output_file.write(json.dumps(result))
     
 def tf_destroy(project, auto_approve=None):
     tf = Terraform(working_dir='.')

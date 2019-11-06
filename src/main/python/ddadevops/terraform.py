@@ -1,7 +1,7 @@
 from os import path
 from json import load
 from subprocess import call
-from .meissa_build import stage, hetzner_api_key, tf_import_name, tf_import_resource
+from .meissa_build import stage, project_dict, tf_import_name, tf_import_resource
 from .python_util import execute
 from python_terraform import *
 
@@ -15,17 +15,18 @@ def tf_copy_common(base_path):
 def tf_plan(project):
     init(project)
     tf = Terraform(working_dir='.')
-    tf.plan(capture_output=False, var=get_hetzner_api_key_as_dict(project))
+    tf.plan(capture_output=False, var=project_dict(project))
 
 def tf_import(project):
     init(project)
     tf = Terraform(working_dir='.')
-    tf.import_cmd(capture_output=False, var=get_hetzner_api_key_as_dict(project), tf_import_name(project), tf_import_resource(project))
+    tf.import_cmd(tf_import_name(project), tf_import_resource(project), \
+        capture_output=False, var=project_dict(project))
 
 def tf_apply(project, p_auto_approve=False):
     init(project)
     tf = Terraform(working_dir='.')
-    tf.apply(capture_output=False, auto_approve=p_auto_approve, var=get_hetzner_api_key_as_dict(project))
+    tf.apply(capture_output=False, auto_approve=p_auto_approve, var=project_dict(project))
     tf_output(project)
 
 def tf_output(project):
@@ -36,7 +37,7 @@ def tf_output(project):
     
 def tf_destroy(project, p_auto_approve=False):
     tf = Terraform(working_dir='.')
-    tf.destroy(capture_output=False, auto_approve=p_auto_approve, var=get_hetzner_api_key_as_dict(project))
+    tf.destroy(capture_output=False, auto_approve=p_auto_approve, var=project_dict(project))
 
 def tf_read_output_json():
     with open(OUTPUT_JSON, 'r') as f:
@@ -49,11 +50,3 @@ def init(project):
         tf.workspace('select', stage(project))
     except:
         tf.workspace('new', stage(project))
-
-def get_hetzner_api_key_as_dict(project):
-    my_hetzner_api_key = hetzner_api_key(project)
-    ret = {}
-    if my_hetzner_api_key:
-        ret['hetzner_api_key'] = my_hetzner_api_key
-    return ret
-

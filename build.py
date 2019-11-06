@@ -27,7 +27,7 @@ use_plugin("python.distutils")
 default_task = "publish"
 
 name = "ddadevops"
-version = "0.3.3"
+version = "0.3.4-dev1"
 summary = "tools to support builds combining gopass, terraform, dda-pallet, aws & hetzner-cloud"
 description = __doc__
 authors = [Author("meissa GmbH", "buero@meissa-gmbh.de")]

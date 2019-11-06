@@ -8,7 +8,7 @@
 1. git commit -m "release"
 2. git tag [version]
 3. pyb publish upload
-4. git push -t
+4. git push && git push --tag
 5. Versions nr in build.py: hochzählen, *.dev0 anfügen
 7. git commit & push
 8. sudo pip3 install ddadevops==0.3.4.dev1 --pre

@@ -7,6 +7,7 @@ def meissa_init_project(project):
         gopass_credential_from_env_path('HTTP_NET_API_KEY_PATH'))
     project.set_property('hetzner_api_key', 
         gopass_credential_from_env_path('HETZNER_API_KEY_PATH'))
+    return project
     
 def hetzner_api_key(project):
    return project.get_property('hetzner_api_key')

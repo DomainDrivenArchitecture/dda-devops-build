@@ -2,6 +2,14 @@
 
 [![Slack](https://img.shields.io/badge/chat-clojurians-green.svg?style=flat)](https://clojurians.slack.com/messages/#dda-pallet/) | [<img src="https://meissa-gmbh.de/img/community/Mastodon_Logotype.svg" width=20 alt="team@social.meissa-gmbh.de"> team@social.meissa-gmbh.de](https://social.meissa-gmbh.de/@team) | [Website & Blog](https://domaindrivenarchitecture.org)
 
+# Setup
+```
+sudo apt install python3-pip
+#sudo pip3 install pip3 --upgrade
+pip3 install pybuilder --user
+pip3 install ddadevops --user
+export PATH=$PATH:~/.local/bin
+```
 
 # Release
 1. Versions nr in build.py: *.dev0 entfernen

@@ -2,8 +2,11 @@ from subprocess import check_output, call
 import os
 import sys
 
-def gopass_credential_from_env_path (env_path):
-    env_path = os.environ.get(env_path, None)
+def gopass_credential_from_env_path (env):
+    env_path = os.environ.get(env, None)
+    return gopass_credential_from_path(env_path)
+
+def gopass_credential_from_path (path):
     credential = None
 
     if env_path:
@@ -14,3 +17,4 @@ def gopass_credential_from_env_path (env_path):
             credential = check_output(['gopass', env_path])
 
     return credential
+

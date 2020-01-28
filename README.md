@@ -7,12 +7,12 @@
 sudo apt install python3-pip
 #sudo pip3 install pip3 --upgrade
 pip3 install pybuilder --user
-pip3 install ddadevops --user
+pip3 install python-terraform, ddadevops --user
 export PATH=$PATH:~/.local/bin
 ```
 
 # Update lib
-pip3 install --pre ddadevops==0.3.7.dev0
+pip3 install --pre ddadevops==0.3.7.dev0 --user
 
 # Release
 1. Versions nr in build.py: *.dev0 entfernen

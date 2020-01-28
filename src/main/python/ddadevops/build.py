@@ -1,30 +1,28 @@
 import os
 from .credential import gopass_credential_from_env_path
-from .build import init_project
 from subprocess import run
 
 STAGE = 'stage'
-HTTP_NET_API_KEY = 'http_net_api_key'
-HETZNER_API_KEY = 'hetzner_api_key'
 PROJECT_ROOT_PATH = 'project_root_path'
 BUILD_COMMONS_PATH = 'build_commons_path'
+MODULE = 'module'
 
-def meissa_init_project(project, project_root_path, build_commons_path, module):
-    project = init_project(project, project_root_path, build_commons_path, module)
-    project.set_property(HTTP_NET_API_KEY, \
-        gopass_credential_from_env_path('HTTP_NET_API_KEY_PATH'))
-    project.set_property(HETZNER_API_KEY, \
-        gopass_credential_from_env_path('HETZNER_API_KEY_PATH'))
+def init_project(project, project_root_path, \
+    build_commons_path, module):
+    project.set_property(STAGE, os.environ.get('STAGE', 'intergation'))
+    project.set_property(PROJECT_ROOT_PATH, project_root_path)
+    project.set_property(BUILD_COMMONS_PATH, build_commons_path)
+    project.set_property(MODULE, module)
     return project
     
-def hetzner_api_key(project):
-   return project.get_property(HETZNER_API_KEY)
-
 def stage(project):
     return project.get_property(STAGE)
 
-def module(project):
+def name(project):
     return project.get_property('name')
+
+def module(project):
+    return project.get_property(MODULE)
 
 def project_root_path(project):
     return project.get_property(PROJECT_ROOT_PATH)

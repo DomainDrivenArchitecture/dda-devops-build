@@ -11,6 +11,9 @@ pip3 install ddadevops --user
 export PATH=$PATH:~/.local/bin
 ```
 
+# Update lib
+pip3 install --pre ddadevops==0.3.7.dev0
+
 # Release
 1. Versions nr in build.py: *.dev0 entfernen
 1. git commit -m "release"

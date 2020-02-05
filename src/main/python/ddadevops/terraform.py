@@ -51,6 +51,7 @@ def project_vars(project):
     my_hetzner_api_key = hetzner_api_key(project)
     my_module = project.name
     ret = {'stage' : stage(project)}
+    # TODO: move to meissa specific part
     if my_hetzner_api_key:
         ret['hetzner_api_key'] = my_hetzner_api_key
     if my_module:

@@ -11,7 +11,7 @@ def add_aws_mixin_config(config, account_name):
 
 class AwsMixin(DevopsTerraformBuild):
 
-    def __init__(project, config):
+    def __init__(self, project, config):
         super().__init__(project, config)
         aws_mixin_config = config['AwsMixin']
         self.account_name = aws_mixin_config['account_name']
@@ -21,11 +21,12 @@ class AwsMixin(DevopsTerraformBuild):
 
     def project_vars(self):
         ret = super().project_vars()
-        return ret.update({'account_name': self.account_name})
+        ret.update({'account_name': self.account_name})
+        return ret
 
     def init_client(self):
         tf = Terraform(working_dir=self.build_path())
-        tf.init(backend_config=self.backend_config)
+        tf.init(backend_config=self.backend_config())
         try:
             tf.workspace('select', slef.stage)
         except:
@@ -34,5 +35,5 @@ class AwsMixin(DevopsTerraformBuild):
 
     def plan(self):
         tf = self.init_client()
-        tf.plan(capture_output=False, var=self.project_vars,
-                var_file=self.backend_config)
+        tf.plan(capture_output=False, var=self.project_vars(),
+                var_file=self.backend_config())

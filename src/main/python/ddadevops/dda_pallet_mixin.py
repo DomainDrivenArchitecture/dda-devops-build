@@ -32,6 +32,10 @@ class DdaPalletMixin(DevopsBuild):
         self.target_template = Template(
             dda_pallet_mixin_config['target_template'])
 
+    def initialize_build_dir(self):
+        super().initialize_build_dir()
+        run('cp *.edn ' + self.build_path(), shell=True)
+
     def dda_write_target(self, node_name, ipv4):
         with open(self.build_path() + self.target_edn_name, "w") as output_file:
             output_file.write(

@@ -17,7 +17,7 @@ class HetznerMixin(DevopsTerraformBuild):
             hetzner_mixin_config['HETZNER_API_KEY_PATH_ENVIRONMENT'])
 
     def project_vars(self):
-        ret = super().project_vars
+        ret = super().project_vars()
         if self.hetzner_api_key:
             ret['hetzner_api_key'] = self.hetzner_api_key
         return ret

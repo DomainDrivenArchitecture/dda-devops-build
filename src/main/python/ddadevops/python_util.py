@@ -7,3 +7,6 @@ def execute(cmd):
     else:
         output = check_output(cmd)
     return output
+
+def filter_none(list):
+    return [x for x in list if x is not None]

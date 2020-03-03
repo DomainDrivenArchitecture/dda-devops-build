@@ -1,4 +1,5 @@
 from subprocess import run
+from .python_util import filter_none
 
 
 def create_devops_build_config(stage, project_root_path, build_commons_path, module):
@@ -7,7 +8,6 @@ def create_devops_build_config(stage, project_root_path, build_commons_path, mod
             'build_commons_path': build_commons_path,
             'module': module,
             'build_dir_name': 'target'}
-
 
 class DevopsBuild:
 
@@ -24,16 +24,11 @@ class DevopsBuild:
         return self.project.get_property('name')
 
     def build_path(self):
-        return self.project_root_path + self.build_dir_name + '/' + self.module + '/'
+        mylist = [self.project_root_path,
+                  self.build_dir_name,
+                  self.module]
+        return '/'.join(filter_none(mylist))
 
     def initialize_build_dir(self):
         run('rm -rf ' + self.build_path(), shell=True)
         run('mkdir -p ' + self.build_path(), shell=True)
-
-
-def tf_import_name(project):
-    return project.get_property('tf_import_name')
-
-
-def tf_import_resource(project):
-    return project.get_property('tf_import_resource')

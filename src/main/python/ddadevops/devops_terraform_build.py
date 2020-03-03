@@ -2,6 +2,7 @@ from os import path
 from json import load
 from subprocess import run
 from python_terraform import *
+from .python_util import filter_none
 from .devops_build import DevopsBuild, create_devops_build_config
 
 
@@ -29,7 +30,9 @@ class DevopsTerraformBuild(DevopsBuild):
         self.output_json_name = config['output_json_name']
 
     def terraform_build_commons_path(self):
-        return self.build_commons_path() + '/' + self.terraform_build_commons_dir_name
+        mylist = [self.build_commons_path,
+                  self.terraform_build_commons_dir_name]
+        return '/'.join(filter_none(mylist))
 
     def project_vars(self):
         ret = {'stage': self.stage}
@@ -41,12 +44,11 @@ class DevopsTerraformBuild(DevopsBuild):
 
     def initialize_build_dir(self):
         super().initialize_build_dir()
-        run('cp -f ' + self.terraform_build_commons_path +
-            '* ' + self.build_path, shell=True)
-        run('cp *.tf ' + self.build_path, shell=True)
-        run('cp *.properties ' + self.build_path, shell=True)
-        run('cp *.tfars ' + self.build_path, shell=True)
-        run('cp *.edn ' + self.build_path, shell=True)
+        run('cp -f ' + self.terraform_build_commons_path() +
+            '* ' + self.build_path(), shell=True)
+        run('cp *.tf ' + self.build_path(), shell=True)
+        run('cp *.properties ' + self.build_path(), shell=True)
+        run('cp *.tfars ' + self.build_path(), shell=True)
 
     def init_client(self):
         tf = Terraform(working_dir=self.build_path())
@@ -68,7 +70,7 @@ class DevopsTerraformBuild(DevopsBuild):
 
     def plan(self):
         tf = self.init_client()
-        tf.plan(capture_output=False, var=self.project_vars)
+        tf.plan(capture_output=False, var=self.project_vars())
 
     def apply(self, p_auto_approve=False):
         tf = self.init_client()

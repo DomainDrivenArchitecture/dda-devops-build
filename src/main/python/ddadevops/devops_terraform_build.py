@@ -1,10 +1,54 @@
 from os import path
 from json import load
 from subprocess import run
-from .meissa_build import stage, hetzner_api_key, tf_import_name, tf_import_resource, \
-    build_commons_path, build_target_path
+from .devops_build import DevopsBuild
 from .python_util import execute
 from python_terraform import *
+
+class DevopsTerraformBuild(DevopsBuild):
+
+    def __init__(self, project, project_root_path, build_commons_path, module, stage, account_name, additional_vars):
+        super().__init__(self, project, project_root_path, build_commons_path, module, stage)
+        self.account_name = account_name
+        self.additional_vars = additional_vars
+        self.terraform_build_commons_dir_name= 'terraform'
+
+    def backend_config(self):
+        return "backend." + self.account_name + "." + self.stage + ".properties"
+
+    def terraform_build_commons_path(self):
+        return self.build_commons_path() + '/' + self.terraform_build_commons_dir_name
+
+    def project_vars(self):
+        ret = {'stage' : self.stage}
+        if self.module:
+            ret['module'] = self.module
+        if self.additional_vars:
+            ret.update(self.additional_vars)
+        return ret
+
+    def initialize_build_dir(self):
+        super().initialize_build_dir()
+        run('cp -f ' + self.terraform_build_commons_path + '* ' + self.build_path, shell=True)
+        run('cp *.tf ' +  self.build_path, shell=True)
+        run('cp *.properties ' + self.build_path, shell=True)
+        run('cp *.tfars ' +  self.build_path, shell=True)
+        run('cp *.edn ' +  self.build_path, shell=True)
+
+    def init_client(self):
+        tf = Terraform(working_dir=self.build_path())
+        tf.init(backend_config=self.backend_config)
+        try:
+            tf.workspace('select', slef.stage)
+        except:
+            tf.workspace('new', self.stage)
+        return tf
+
+    def plan(self):
+        tf = self.init_client()
+        tf.plan(capture_output=False, var=self.project_vars, var_file=self.backend_config)
+
+
 
 OUTPUT_JSON = "output.json"
 
@@ -58,10 +102,4 @@ def project_vars(project):
         ret['module'] = my_module
     return ret
 
-def init(project):
-    tf = Terraform(working_dir=build_target_path(project))
-    tf.init()
-    try:
-        tf.workspace('select', stage(project))
-    except:
-        tf.workspace('new', stage(project))
+

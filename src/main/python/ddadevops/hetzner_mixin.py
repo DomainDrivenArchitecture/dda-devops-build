@@ -3,8 +3,9 @@ from .devops_terraform_build import DevopsTerraformBuild
 
 
 def add_hetzner_mixin_config(config):
-    return config.update({'HetznerMixin':
-                          {'HETZNER_API_KEY_PATH_ENVIRONMENT': 'HETZNER_API_KEY_PATH'}})
+    config.update({'HetznerMixin':
+                   {'HETZNER_API_KEY_PATH_ENVIRONMENT': 'HETZNER_API_KEY_PATH'}})
+    return config
 
 
 class HetznerMixin(DevopsTerraformBuild):

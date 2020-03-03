@@ -4,8 +4,9 @@ from .devops_terraform_build import DevopsTerraformBuild
 
 
 def add_aws_mixin_config(config, account_name):
-    return config.update({'AwsMixin':
-                          {'account_name': account_name}})
+    config.update({'AwsMixin':
+                   {'account_name': account_name}})
+    return config
 
 
 class AwsMixin(DevopsTerraformBuild):
@@ -30,7 +31,7 @@ class AwsMixin(DevopsTerraformBuild):
         except:
             tf.workspace('new', self.stage)
         return tf
-    
+
     def plan(self):
         tf = self.init_client()
         tf.plan(capture_output=False, var=self.project_vars,

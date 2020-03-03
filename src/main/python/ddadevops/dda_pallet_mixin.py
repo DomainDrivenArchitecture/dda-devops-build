@@ -4,18 +4,19 @@ from .devops_build import DevopsBuild
 
 
 def add_dda_pallet_mixin_config(config, tenant, application, domain_file_name):
-    return config.update({'DdaPalletMixin':
-                          {'tenant': tenant,
-                           'application': application,
-                           'domain_file_name': domain_file_name,
-                           'target_edn_name': 'target.edn',
-                           'jar_file': 'target/meissa-tenant-server.jar',
-                           'target_template':
-                           """
+    config.update({'DdaPalletMixin':
+                   {'tenant': tenant,
+                    'application': application,
+                    'domain_file_name': domain_file_name,
+                    'target_edn_name': 'target.edn',
+                    'jar_file': 'target/meissa-tenant-server.jar',
+                    'target_template':
+                    """
 {:existing [{:node-name "$node_name"
              :node-ip "$ipv4"}]
  :provisioning-user {:login "root"}}
 """, }})
+    return config
 
 
 class DdaPalletMixin(DevopsBuild):

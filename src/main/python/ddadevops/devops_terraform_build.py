@@ -9,12 +9,13 @@ def create_devops_terraform_build_config(stage, project_root_path, build_commons
                                          account_name, additional_vars, tf_import_name, tf_import_resource):
     ret = create_devops_build_config(
         stage, project_root_path, build_commons_path, module)
-    return ret.update({'account_name': account_name,
-                       'additional_vars': additional_vars,
-                       'tf_import_name': tf_import_name,
-                       'tf_import_resource': tf_import_resource,
-                       'terraform_build_commons_dir_name': 'terraform',
-                       'output_json_name': 'output.json'})
+    ret.update({'account_name': account_name,
+                'additional_vars': additional_vars,
+                'tf_import_name': tf_import_name,
+                'tf_import_resource': tf_import_resource,
+                'terraform_build_commons_dir_name': 'terraform',
+                'output_json_name': 'output.json'})
+    return ret
 
 
 class DevopsTerraformBuild(DevopsBuild):

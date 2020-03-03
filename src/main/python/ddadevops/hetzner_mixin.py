@@ -1,10 +1,19 @@
 from .credential import gopass_credential_from_env_path
+from .devops_terraform_build import DevopsTerraformBuild
 
-class HetznerMixin:
 
-    def __init__(self, project, project_root_path, build_commons_path, module, stage):
-            super().__init__(self, project, project_root_path, build_commons_path, module, stage)
-            self.hetzner_api_key = gopass_credential_from_env_path('HETZNER_API_KEY_PATH')
+def add_hetzner_mixin_config(config):
+    return config.update({'HetznerMixin':
+                          {'HETZNER_API_KEY_PATH_ENVIRONMENT': 'HETZNER_API_KEY_PATH'}})
+
+
+class HetznerMixin(DevopsTerraformBuild):
+
+    def __init__(self, project, config):
+        super().__init__(self, project, config)
+        hetzner_mixin_config = config['HetznerMixin']
+        self.hetzner_api_key = gopass_credential_from_env_path(
+            hetzner_mixin_config['HETZNER_API_KEY_PATH_ENVIRONMENT'])
 
     def project_vars(self):
         ret = super().project_vars

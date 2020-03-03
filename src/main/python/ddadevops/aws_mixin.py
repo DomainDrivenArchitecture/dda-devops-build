@@ -11,8 +11,8 @@ def add_aws_mixin_config(config, account_name):
 
 class AwsMixin(DevopsTerraformBuild):
 
-    def __init__(self, project, config):
-        super().__init__(self, project, config)
+    def __init__(project, config):
+        super().__init__(project, config)
         aws_mixin_config = config['AwsMixin']
         self.account_name = aws_mixin_config['account_name']
 

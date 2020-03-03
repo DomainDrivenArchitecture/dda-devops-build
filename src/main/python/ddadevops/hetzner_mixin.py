@@ -11,7 +11,7 @@ def add_hetzner_mixin_config(config):
 class HetznerMixin(DevopsTerraformBuild):
 
     def __init__(self, project, config):
-        super().__init__(self, project, config)
+        super().__init__(project, config)
         hetzner_mixin_config = config['HetznerMixin']
         self.hetzner_api_key = gopass_credential_from_env_path(
             hetzner_mixin_config['HETZNER_API_KEY_PATH_ENVIRONMENT'])

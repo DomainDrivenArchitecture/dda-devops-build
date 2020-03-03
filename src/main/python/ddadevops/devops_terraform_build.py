@@ -21,7 +21,7 @@ def create_devops_terraform_build_config(stage, project_root_path, build_commons
 class DevopsTerraformBuild(DevopsBuild):
 
     def __init__(self, project, config):
-        super().__init__(self, project, config)
+        super().__init__(project, config)
         self.additional_vars = config['additional_vars']
         self.tf_import_name = config['tf_import_name']
         self.tf_import_resource = config['tf_import_resource']

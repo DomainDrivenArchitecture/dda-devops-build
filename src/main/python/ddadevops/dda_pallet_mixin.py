@@ -22,7 +22,7 @@ def add_dda_pallet_mixin_config(config, tenant, application, domain_file_name):
 class DdaPalletMixin(DevopsBuild):
 
     def __init__(self, project, config):
-        super().__init__(self, project, config)
+        super().__init__(project, config)
         dda_pallet_mixin_config = config['DdaPalletMixin']
         self.tenant = dda_pallet_mixin_config['tenant']
         self.application = dda_pallet_mixin_config['application']

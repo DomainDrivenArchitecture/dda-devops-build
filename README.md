@@ -11,7 +11,13 @@ export PATH=$PATH:~/.local/bin
 ```
 
 # Update lib
-pip3 install --pre ddadevops==0.3.7.dev0 --user
+pip3 install --pre ddadevops==0.4.0.dev0 --user
+
+# Snapshot
+1. pyb publish upload
+2. Versions nr in build.py: hochzählen, *.dev0 anfügen
+3. sudo pip3 install --pre ddadevops==0.4.0.dev0 --user
+
 
 # Release
 1. Versions nr in build.py: *.dev0 entfernen
@@ -21,7 +27,7 @@ pip3 install --pre ddadevops==0.3.7.dev0 --user
 4. git push && git push --tag
 5. Versions nr in build.py: hochzählen, *.dev0 anfügen
 7. git commit & push
-8. sudo pip3 install --pre ddadevops==0.3.7.dev0
+8. sudo pip3 install --pre ddadevops==0.4.0.dev0 --user
 
 ## License
 

@@ -7,15 +7,16 @@ from .devops_build import DevopsBuild, create_devops_build_config
 
 
 def create_devops_terraform_build_config(stage, project_root_path, build_commons_path, module,
-                                         account_name, additional_vars, tf_import_name, tf_import_resource):
+                                         account_name, additional_vars, 
+                                         build_dir_name='target',
+                                         terraform_build_commons_dir_name='terraform', 
+                                         output_json_name='output.json'):
     ret = create_devops_build_config(
-        stage, project_root_path, build_commons_path, module)
+        stage, project_root_path, build_commons_path, module, build_dir_name)
     ret.update({'account_name': account_name,
                 'additional_vars': additional_vars,
-                'tf_import_name': tf_import_name,
-                'tf_import_resource': tf_import_resource,
-                'terraform_build_commons_dir_name': 'terraform',
-                'output_json_name': 'output.json'})
+                'terraform_build_commons_dir_name': terraform_build_commons_dir_name,
+                'output_json_name': output_json_name})
     return ret
 
 
@@ -24,8 +25,6 @@ class DevopsTerraformBuild(DevopsBuild):
     def __init__(self, project, config):
         super().__init__(project, config)
         self.additional_vars = config['additional_vars']
-        self.tf_import_name = config['tf_import_name']
-        self.tf_import_resource = config['tf_import_resource']
         self.terraform_build_commons_dir_name = config['terraform_build_commons_dir_name']
         self.output_json_name = config['output_json_name']
 
@@ -83,7 +82,7 @@ class DevopsTerraformBuild(DevopsBuild):
         tf.destroy(capture_output=False, auto_approve=p_auto_approve,
                    var=self.project_vars())
 
-    def tf_import(self):
+    def tf_import(self, tf_import_name, tf_import_resource,):
         tf = self.init_client()
-        tf.import_cmd(self.tf_import_name, self.tf_import_resource,
+        tf.import_cmd(tf_import_name, tf_import_resource,
                       capture_output=False, var=self.project_vars())

@@ -27,10 +27,11 @@ class AwsMixin(DevopsTerraformBuild):
     def init_client(self):
         tf = Terraform(working_dir=self.build_path())
         tf.init(backend_config=self.backend_config())
-        try:
-            tf.workspace('select', slef.stage)
-        except:
-            tf.workspace('new', self.stage)
+        if self.use_workspace:
+            try:
+                tf.workspace('select', slef.stage)
+            except:
+                tf.workspace('new', self.stage)
         return tf
 
     def plan(self):

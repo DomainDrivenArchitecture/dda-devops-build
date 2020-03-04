@@ -21,11 +21,12 @@ class DevopsBuild:
         project.set_property("devops_build", self)
 
     def name(self):
-        return self.project.get_property('name')
+        return self.project.name
 
     def build_path(self):
         mylist = [self.project_root_path,
                   self.build_dir_name,
+                  self.name(),
                   self.module]
         return '/'.join(filter_none(mylist))
 

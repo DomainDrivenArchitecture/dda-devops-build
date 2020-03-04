@@ -10,13 +10,15 @@ def create_devops_terraform_build_config(stage, project_root_path, build_commons
                                          account_name, additional_vars, 
                                          build_dir_name='target',
                                          terraform_build_commons_dir_name='terraform', 
-                                         output_json_name='output.json'):
+                                         output_json_name='output.json',
+                                         use_workspace=True):
     ret = create_devops_build_config(
         stage, project_root_path, build_commons_path, module, build_dir_name)
     ret.update({'account_name': account_name,
                 'additional_vars': additional_vars,
                 'terraform_build_commons_dir_name': terraform_build_commons_dir_name,
-                'output_json_name': output_json_name})
+                'output_json_name': output_json_name,
+                'use_workspace': use_workspace})
     return ret
 
 
@@ -27,6 +29,7 @@ class DevopsTerraformBuild(DevopsBuild):
         self.additional_vars = config['additional_vars']
         self.terraform_build_commons_dir_name = config['terraform_build_commons_dir_name']
         self.output_json_name = config['output_json_name']
+        self.use_workspace = config['use_workspace']
 
     def terraform_build_commons_path(self):
         mylist = [self.build_commons_path,
@@ -52,10 +55,11 @@ class DevopsTerraformBuild(DevopsBuild):
     def init_client(self):
         tf = Terraform(working_dir=self.build_path())
         tf.init()
-        try:
-            tf.workspace('select', slef.stage)
-        except:
-            tf.workspace('new', self.stage)
+        if self.use_workspace:
+            try:
+                tf.workspace('select', slef.stage)
+            except:
+                tf.workspace('new', self.stage)
         return tf
 
     def write_output(self, tf):

@@ -11,9 +11,6 @@ pip3 install boto3 python-terraform --user
 export PATH=$PATH:~/.local/bin
 ```
 
-# Update lib
-pip3 install --pre ddadevops==0.4.0.dev0 --user
-
 # Snapshot
 1. pyb publish upload
 2. Versions nr in build.py: hochzählen, *.dev0 anfügen
@@ -29,6 +26,9 @@ pip3 install --pre ddadevops==0.4.0.dev0 --user
 5. Versions nr in build.py: hochzählen, *.dev0 anfügen
 7. git commit & push
 8. sudo pip3 install --pre ddadevops==0.4.0.dev0 --user
+
+# Update to newest dev version
+pip3 install --pre ddadevops==0.4.1.dev0 --user
 
 ## License
 

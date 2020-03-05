@@ -27,11 +27,12 @@ use_plugin("python.distutils")
 default_task = "publish"
 
 name = "ddadevops"
-version = "0.4.0.dev15"
+version = "0.4.0.dev18"
 summary = "tools to support builds combining gopass, terraform, dda-pallet, aws & hetzner-cloud"
 description = __doc__
 authors = [Author("meissa GmbH", "buero@meissa-gmbh.de")]
 url = "https://github.com/DomainDrivenArchitecture/dda-devops-build"
+requires_python = ">=2.7,!=3.0,!=3.1,!=3.2,!=3.3,!=3.4,<3.9"
 license = "Apache Software License"
 
 @init
@@ -52,7 +53,17 @@ def initialize(project):
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Operating System :: POSIX :: Linux',
+        'Operating System :: OS Independent',
+        'Development Status :: 5 - Production/Stable',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: Apache Software License',
         'Topic :: Software Development :: Build Tools',
+        'Topic :: Software Development :: Quality Assurance',
+        'Topic :: Software Development :: Testing'
         ])

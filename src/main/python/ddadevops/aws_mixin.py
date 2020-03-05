@@ -15,6 +15,7 @@ class AwsMixin(DevopsTerraformBuild):
 
     def __init__(self, project, config):
         super().__init__(project, config)
+        project.build_depends_on('boto3')
         aws_mixin_config = config['AwsMixin']
         self.account_name = aws_mixin_config['account_name']
 
@@ -40,6 +41,17 @@ class AwsMixin(DevopsTerraformBuild):
         tf = self.init_client()
         tf.plan(capture_output=False, var=self.project_vars(),
                 var_file=self.backend_config())
+
+    def apply(self, p_auto_approve=False):
+        tf = self.init_client()
+        tf.apply(capture_output=False, auto_approve=p_auto_approve,
+                 var=self.project_vars(), var_file=self.backend_config())
+        self.write_output(tf)
+
+    def destroy(self, p_auto_approve=False):
+        tf = self.init_client()
+        tf.destroy(capture_output=False, auto_approve=p_auto_approve,
+                   var=self.project_vars(), var_file=self.backend_config())
 
     def get_username_from_account(self, p_account_name):
         login_id = execute('cat ~/.aws/accounts | grep -A 2 "\[' + p_account_name +

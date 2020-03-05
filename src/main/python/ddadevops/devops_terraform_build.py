@@ -26,6 +26,7 @@ class DevopsTerraformBuild(DevopsBuild):
 
     def __init__(self, project, config):
         super().__init__(project, config)
+        project.build_depends_on('python-terraform')
         self.additional_vars = config['additional_vars']
         self.terraform_build_commons_dir_name = config['terraform_build_commons_dir_name']
         self.output_json_name = config['output_json_name']

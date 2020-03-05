@@ -22,6 +22,7 @@ class AwsMixin(DevopsTerraformBuild):
     def __init__(self, project, config):
         super().__init__(project, config)
         project.build_depends_on('boto3')
+        project.build_depends_on('mfa')
         aws_mixin_config = config['AwsMixin']
         self.account_name = aws_mixin_config['account_name']
         self.account_id = aws_mixin_config['account_id']

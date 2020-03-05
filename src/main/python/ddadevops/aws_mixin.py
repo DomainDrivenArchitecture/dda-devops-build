@@ -5,9 +5,15 @@ from .python_util import execute
 from .devops_terraform_build import DevopsTerraformBuild
 
 
-def add_aws_mixin_config(config, account_name):
+def add_aws_mixin_config(config, account_name, account_id, region,
+mfa_role='developer', mfa_account_prefix='', mfa_login_account_suffix='main'):
     config.update({'AwsMixin':
-                   {'account_name': account_name}})
+                   {'account_name': account_name,
+                    'account_id': account_id,
+                    'region': region, 
+                    'mfa_role': mfa_role,
+                    'mfa_account_prefix': mfa_account_prefix,
+                    'mfa_login_account_suffix': mfa_login_account_suffix}})
     return config
 
 
@@ -18,13 +24,23 @@ class AwsMixin(DevopsTerraformBuild):
         project.build_depends_on('boto3')
         aws_mixin_config = config['AwsMixin']
         self.account_name = aws_mixin_config['account_name']
+        self.account_id = aws_mixin_config['account_id']
+        self.region = aws_mixin_config['region']
+        self.mfa_role = aws_mixin_config['mfa_role']
+        self.mfa_account_prefix = aws_mixin_config['mfa_account_prefix']
+        self.mfa_login_account_suffix = aws_mixin_config['mfa_login_account_suffix']
 
     def backend_config(self):
         return "backend." + self.account_name + "." + self.stage + ".properties"
 
     def project_vars(self):
         ret = super().project_vars()
-        ret.update({'account_name': self.account_name})
+        ret.update({'account_name': self.account_name,
+                    'account_id': self.account_id,
+                    'region': self.region,
+                    'mfa_role': self.mfa_role,
+                    'mfa_account_prefix': self.mfa_account_prefix,
+                    'mfa_login_account_suffix': self.mfa_login_account_suffix})
         return ret
 
     def init_client(self):
@@ -71,20 +87,18 @@ class AwsMixin(DevopsTerraformBuild):
         execute('aws configure --profile ' + to_profile +
                 ' set ' + key + ' ' + secret, shell=True)
 
-    def get_mfa_session(self, to_account_suffix='dev', role='kauf_developer',
-                        toke=None):
-        prefix = 'breuninger-'
-        from_account_name = 'breuninger-iam'
+    def get_mfa_session(self, toke=None):
+        from_account_name = self.mfa_account_prefix + self.mfa_login_account_suffix
         from_account_id = self.get_account_id_from_account(from_account_name)
-        to_account_name = prefix + to_account_suffix
+        to_account_name = self.mfa_account_prefix + self.account_name
         to_account_id = self.get_account_id_from_account(to_account_name)
         login_id = self.get_username_from_account(from_account_name)
         mfa_token = self.get_mfa()
         ses = Session(profile_name=from_account_name)
         sts_client = ses.client('sts')
         response = sts_client.assume_role(
-            RoleArn='arn:aws:iam::' + to_account_id + ':role/' + role,
-            RoleSessionName=to_account_id + '-' + to_account_suffix + '-' + role,
+            RoleArn='arn:aws:iam::' + to_account_id + ':role/' + self.mfa_role,
+            RoleSessionName=to_account_id + '-' + self.account_name + '-' + self.mfa_role,
             SerialNumber='arn:aws:iam::' + from_account_id + ':mfa/' + login_id,
             TokenCode=mfa_token
         )

@@ -2,9 +2,9 @@ from .credential import gopass_credential_from_env_path
 from .devops_terraform_build import DevopsTerraformBuild
 
 
-def add_hetzner_mixin_config(config):
+def add_hetzner_mixin_config(config, hetzner_api_key_path_env='HETZNER_API_KEY_PATH'):
     config.update({'HetznerMixin':
-                   {'HETZNER_API_KEY_PATH_ENVIRONMENT': 'HETZNER_API_KEY_PATH'}})
+                   {'HETZNER_API_KEY_PATH_ENVIRONMENT': hetzner_api_key_path_env}})
     return config
 
 

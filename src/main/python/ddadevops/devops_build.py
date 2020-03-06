@@ -2,12 +2,14 @@ from subprocess import run
 from .python_util import filter_none
 
 
-def create_devops_build_config(stage, project_root_path, build_commons_path, module, build_dir_name='target'):
+def create_devops_build_config(stage, project_root_path, build_commons_path, module,
+                               build_dir_name='target'):
     return {'stage': stage,
             'project_root_path': project_root_path,
             'build_commons_path': build_commons_path,
             'module': module,
             'build_dir_name': build_dir_name}
+
 
 class DevopsBuild:
 

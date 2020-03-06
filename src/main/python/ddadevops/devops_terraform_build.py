@@ -7,15 +7,14 @@ from .devops_build import DevopsBuild, create_devops_build_config
 
 
 def create_devops_terraform_build_config(stage, project_root_path, build_commons_path, module,
-                                         account_name, additional_vars, 
+                                         additional_vars, 
                                          build_dir_name='target',
                                          terraform_build_commons_dir_name='terraform', 
                                          output_json_name='output.json',
                                          use_workspace=True):
     ret = create_devops_build_config(
         stage, project_root_path, build_commons_path, module, build_dir_name)
-    ret.update({'account_name': account_name,
-                'additional_vars': additional_vars,
+    ret.update({'additional_vars': additional_vars,
                 'terraform_build_commons_dir_name': terraform_build_commons_dir_name,
                 'output_json_name': output_json_name,
                 'use_workspace': use_workspace})

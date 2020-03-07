@@ -10,6 +10,8 @@ def create_devops_build_config(stage, project_root_path, build_commons_path, mod
             'module': module,
             'build_dir_name': build_dir_name}
 
+def get_devops_build(project):
+    return project.get_property('devops_build')
 
 class DevopsBuild:
 
@@ -20,7 +22,7 @@ class DevopsBuild:
         self.module = config['module']
         self.build_dir_name = config['build_dir_name']
         self.project = project
-        project.set_property("devops_build", self)
+        project.set_property('devops_build', self)
 
     def name(self):
         return self.project.name

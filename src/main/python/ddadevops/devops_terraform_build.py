@@ -34,7 +34,7 @@ class DevopsTerraformBuild(DevopsBuild):
     def terraform_build_commons_path(self):
         mylist = [self.build_commons_path,
                   self.terraform_build_commons_dir_name]
-        return '/'.join(filter_none(mylist))
+        return '/'.join(filter_none(mylist)) + '/'
 
     def project_vars(self):
         ret = {'stage': self.stage}

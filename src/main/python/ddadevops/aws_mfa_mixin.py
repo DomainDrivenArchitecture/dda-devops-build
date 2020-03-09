@@ -2,7 +2,7 @@ from python_terraform import *
 from boto3 import *
 from .credential import gopass_credential_from_env_path
 from .python_util import execute
-from .aws_mixin import AwsMixin
+from .aws_backend_properties_mixin import AwsBackendPropertiesMixin
 
 
 def add_aws_mfa_mixin_config(config, account_id, region,
@@ -16,7 +16,7 @@ mfa_role='developer', mfa_account_prefix='', mfa_login_account_suffix='main'):
     return config
 
 
-class AwsMfaMixin(AwsMixin):
+class AwsMfaMixin(AwsBackendPropertiesMixin):
 
     def __init__(self, project, config):
         super().__init__(project, config)

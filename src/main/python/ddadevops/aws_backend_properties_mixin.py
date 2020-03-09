@@ -2,17 +2,17 @@ from python_terraform import *
 from .devops_terraform_build import DevopsTerraformBuild
 
 
-def add_aws_mixin_config(config, account_name):
-    config.update({'AwsMixin':
+def add_aws_backend_properties_mixin_config(config, account_name):
+    config.update({'AwsBackendPropertiesMixin':
                    {'account_name': account_name}})
     return config
 
 
-class AwsMixin(DevopsTerraformBuild):
+class AwsBackendPropertiesMixin(DevopsTerraformBuild):
 
     def __init__(self, project, config):
         super().__init__(project, config)
-        aws_mixin_config = config['AwsMixin']
+        aws_mixin_config = config['AwsBackendPropertiesMixin']
         self.account_name = aws_mixin_config['account_name']
         
     def backend_config(self):

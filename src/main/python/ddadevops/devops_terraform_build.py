@@ -1,5 +1,5 @@
 from os import path
-from json import load
+from json import load, dumps
 from subprocess import run
 from python_terraform import *
 from .python_util import filter_none
@@ -7,18 +7,19 @@ from .devops_build import DevopsBuild, create_devops_build_config
 
 
 def create_devops_terraform_build_config(stage, project_root_path, build_commons_path, module,
-                                         additional_vars, 
+                                         additional_vars,
                                          build_dir_name='target',
-                                         terraform_build_commons_dir_name='terraform', 
+                                         terraform_build_commons_dir_name='terraform',
                                          output_json_name='output.json',
-                                         use_workspace=True, print_terraform_command=False):
+                                         use_workspace=True,
+                                         debug_print_terraform_command=False):
     ret = create_devops_build_config(
         stage, project_root_path, build_commons_path, module, build_dir_name)
     ret.update({'additional_vars': additional_vars,
                 'terraform_build_commons_dir_name': terraform_build_commons_dir_name,
                 'output_json_name': output_json_name,
-                'use_workspace': use_workspace
-                'print_terraform_command': print_terraform_command})
+                'use_workspace': use_workspace,
+                'debug_print_terraform_command': debug_print_terraform_command})
     return ret
 
 
@@ -31,7 +32,7 @@ class DevopsTerraformBuild(DevopsBuild):
         self.terraform_build_commons_dir_name = config['terraform_build_commons_dir_name']
         self.output_json_name = config['output_json_name']
         self.use_workspace = config['use_workspace']
-        self.print_terraform_command = config['print_terraform_command']
+        self.debug_print_terraform_command = config['debug_print_terraform_command']
 
     def terraform_build_commons_path(self):
         mylist = [self.build_commons_path,
@@ -100,5 +101,8 @@ class DevopsTerraformBuild(DevopsBuild):
                       capture_output=False, var=self.project_vars())
 
     def print_terraform_command(self, operation):
-        if self.print_terraform_command:
-            print('cd ' + self.build_path() + ' && terraform ' + operation + self.project_vars())
+        if self.debug_print_terraform_command:
+            output = 'cd ' + self.build_path() + ' && terraform ' + operation
+            for key, value in self.project_vars().items():
+                output = output + ' -var="' + key + '=' + value + '"'
+            print(output)

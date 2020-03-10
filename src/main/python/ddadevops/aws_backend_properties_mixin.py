@@ -25,6 +25,7 @@ class AwsBackendPropertiesMixin(DevopsTerraformBuild):
 
     def init_client(self):
         tf = Terraform(working_dir=self.build_path())
+        self.print_terraform_command('init --backend-config=' + self.backend_config())
         tf.init(backend_config=self.backend_config())
         if self.use_workspace:
             try:
@@ -35,16 +36,19 @@ class AwsBackendPropertiesMixin(DevopsTerraformBuild):
 
     def plan(self):
         tf = self.init_client()
+        self.print_terraform_command('plan --var-file=' + self.backend_config())
         tf.plan(capture_output=False, var=self.project_vars(),
                 var_file=self.backend_config())
 
     def apply(self, p_auto_approve=False):
         tf = self.init_client()
+        self.print_terraform_command('apply --var-file=' + self.backend_config())
         tf.apply(capture_output=False, auto_approve=p_auto_approve,
                  var=self.project_vars(), var_file=self.backend_config())
         self.write_output(tf)
 
     def destroy(self, p_auto_approve=False):
         tf = self.init_client()
+        self.print_terraform_command('destroy --var-file=' + self.backend_config())
         tf.destroy(capture_output=False, auto_approve=p_auto_approve,
                    var=self.project_vars(), var_file=self.backend_config())

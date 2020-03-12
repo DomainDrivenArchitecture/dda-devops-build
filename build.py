@@ -17,6 +17,7 @@
 from pybuilder.core import init, use_plugin, Author
 
 use_plugin("python.core")
+use_plugin("copy_resources")
 use_plugin("filter_resources")
 #use_plugin("python.unittest")
 #use_plugin("python.coverage")
@@ -27,7 +28,7 @@ use_plugin("python.distutils")
 default_task = "publish"
 
 name = "ddadevops"
-version = "0.4.1.dev15"
+version = "0.4.1.dev32"
 summary = "tools to support builds combining gopass, terraform, dda-pallet, aws & hetzner-cloud"
 description = __doc__
 authors = [Author("meissa GmbH", "buero@meissa-gmbh.de")]
@@ -41,8 +42,14 @@ def initialize(project):
     #project.build_depends_on('unittest-xml-reporting')
 
     project.set_property("verbose", True)
-    project.get_property("filter_resources_glob").append("**/ddadevops/__init__.py")
+    project.get_property("filter_resources_glob").append("main/python/ddadevops/__init__.py")
     #project.set_property("dir_source_unittest_python", "src/unittest/python")
+
+    project.set_property("copy_resources_target", "$dir_dist/ddadevops")
+    project.get_property("copy_resources_glob").append("LICENSE")
+    project.get_property("copy_resources_glob").append("src/main/resources/terraform/*")
+    project.include_file("ddadevops", "LICENSE")
+    project.include_file("ddadevops", "src/main/resources/terraform/*")
     
     #project.set_property('distutils_upload_sign', True)
     #project.set_property('distutils_upload_sign_identity', '')

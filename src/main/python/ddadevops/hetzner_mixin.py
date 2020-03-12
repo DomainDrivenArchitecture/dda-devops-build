@@ -21,3 +21,8 @@ class HetznerMixin(DevopsTerraformBuild):
         if self.hetzner_api_key:
             ret['hetzner_api_key'] = self.hetzner_api_key
         return ret
+
+    def copy_build_resources_from_package(self):
+        super().copy_build_resources_from_package()
+        self.copy_build_resource_file_from_package('hetzner_provider.tf')
+        self.copy_build_resource_file_from_package('hetzner_mixin_vars.tf')

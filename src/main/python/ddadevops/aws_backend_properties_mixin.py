@@ -23,6 +23,12 @@ class AwsBackendPropertiesMixin(DevopsTerraformBuild):
         ret.update({'account_name': self.account_name})
         return ret
 
+    def copy_build_resources_from_package(self):
+        super().copy_build_resources_from_package()
+        self.copy_build_resource_file_from_package('aws_provider.tf')
+        self.copy_build_resource_file_from_package('aws_backend_properties_vars.tf')
+        self.copy_build_resource_file_from_package('aws_backend_with_properties.tf')
+
     def init_client(self):
         tf = Terraform(working_dir=self.build_path())
         self.print_terraform_command('init --backend-config=' + self.backend_config())

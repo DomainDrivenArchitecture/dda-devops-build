@@ -85,7 +85,9 @@ class DevopsTerraformBuild(DevopsBuild):
                 tf.workspace('new', self.stage)
         return tf
 
-    def write_output(self, tf):
+    def write_output(self, tf=None):
+        if tf is None:
+            tf = self.init_client()
         self.print_terraform_command('output -json')
         result = tf.output(json=IsFlagged)
         with open(self.build_path() + self.output_json_name, "w") as output_file:

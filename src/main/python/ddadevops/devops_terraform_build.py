@@ -103,15 +103,17 @@ class DevopsTerraformBuild(DevopsBuild):
     def apply(self, p_auto_approve=False):
         tf = self.init_client()
         self.print_terraform_command('apply')
-        kwargs = {"auto-approve": p_auto_approve}
-        tf.apply(capture_output=False, var=self.project_vars(),**kwargs)
+        tf.apply(capture_output=False, var=self.project_vars(),skip_plan=p_auto_approve)
         self.write_output(tf)
 
     def destroy(self, p_auto_approve=False):
         tf = self.init_client()
         self.print_terraform_command('destroy')
-        kwargs = {"auto-approve": p_auto_approve}
-        tf.destroy(capture_output=False, var=self.project_vars(),**kwargs)
+        if p_auto_approve:
+            force=IsFlagged
+        else:
+            force=None
+        tf.destroy(capture_output=False, force=force, var=self.project_vars())
 
     def tf_import(self, tf_import_name, tf_import_resource,):
         tf = self.init_client()

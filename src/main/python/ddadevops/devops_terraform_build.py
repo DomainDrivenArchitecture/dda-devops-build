@@ -25,7 +25,21 @@ def create_devops_terraform_build_config(stage, project_root_path, build_commons
                 'debug_print_terraform_command': debug_print_terraform_command})
     return ret
 
+
 class WorkaroundTerraform(Terraform):
+    def __init__(self, working_dir=None,
+                 targets=None,
+                 state=None,
+                 variables=None,
+                 parallelism=None,
+                 var_file=None,
+                 terraform_bin_path=None,
+                 is_env_vars_included=True,
+                 ):
+        super().__init__(working_dir, targets, state, variables, parallelism,
+                         var_file,  terraform_bin_path, is_env_vars_included)
+        self.latest_cmd = ''
+
     def apply(self, dir_or_plan=None, input=False, skip_plan=False, no_color=IsFlagged,
               **kwargs):
         """
@@ -41,17 +55,18 @@ class WorkaroundTerraform(Terraform):
         default = kwargs
         default['input'] = input
         default['no_color'] = no_color
+        if skip_plan:
+            default['auto-approve'] = IsFlagged
+        else:
+            default['auto-approve'] = None
         option_dict = self._generate_default_options(default)
-        default['auto-approve'] = (skip_plan == True)
         args = self._generate_default_args(dir_or_plan)
         return self.cmd('apply', *args, **option_dict)
 
     def generate_cmd_string(self, cmd, *args, **kwargs):
-        self.latest_cmd = super().generate_cmd_string(self, cmd, *args, **kwargs)
-        return self.latest_cmd
-
-    def latest_cmd(self):
-        return self.latest_cmd
+        result = super().generate_cmd_string(cmd, *args, **kwargs)
+        self.latest_cmd = ' '.join(result)
+        return result
 
 
 class DevopsTerraformBuild(DevopsBuild):
@@ -78,9 +93,10 @@ class DevopsTerraformBuild(DevopsBuild):
         if self.additional_vars:
             ret.update(self.additional_vars)
         return ret
-    
+
     def copy_build_resource_file_from_package(self, name):
-        my_data = resource_string(__name__, "src/main/resources/terraform/" + name)
+        my_data = resource_string(
+            __name__, "src/main/resources/terraform/" + name)
         with open(self.build_path() + '/' + name, "w") as output_file:
             output_file.write(my_data.decode(sys.stdout.encoding))
 
@@ -127,24 +143,27 @@ class DevopsTerraformBuild(DevopsBuild):
 
     def plan(self):
         tf = self.init_client()
-        tf.plan(capture_output=False, raise_on_error=True, var=self.project_vars())
+        tf.plan(capture_output=False, raise_on_error=True,
+                var=self.project_vars())
         self.print_terraform_command(tf)
 
     def apply(self, auto_approve=False):
         tf = self.init_client()
-        tf.apply(capture_output=False, raise_on_error=True, skip_plan=auto_approve,
-            var=self.project_vars())
+        tf.apply(capture_output=False, raise_on_error=True,
+                 skip_plan=auto_approve,
+                 var=self.project_vars())
         self.print_terraform_command(tf)
         self.write_output(tf)
 
     def destroy(self, auto_approve=False):
         tf = self.init_client()
         if auto_approve:
-            force=IsFlagged
+            force = IsFlagged
         else:
-            force=None
-        tf.destroy(capture_output=False, raise_on_error=True, force=force, 
-            var=self.project_vars())
+            force = None
+        tf.destroy(capture_output=False, raise_on_error=True,
+                   force=force,
+                   var=self.project_vars())
         self.print_terraform_command(tf)
 
     def tf_import(self, tf_import_name, tf_import_resource,):
@@ -155,5 +174,5 @@ class DevopsTerraformBuild(DevopsBuild):
 
     def print_terraform_command(self, tf):
         if self.debug_print_terraform_command:
-            output = 'cd ' + self.build_path() + ' ' + tf.latest_cmd()
+            output = 'cd ' + self.build_path() + ' && ' + tf.latest_cmd
             print(output)

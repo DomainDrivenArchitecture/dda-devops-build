@@ -1,5 +1,5 @@
 from python_terraform import *
-from .devops_terraform_build import DevopsTerraformBuild
+from .devops_terraform_build import DevopsTerraformBuild, WorkaroundTerraform
 
 
 def add_aws_backend_properties_mixin_config(config, account_name):
@@ -14,7 +14,7 @@ class AwsBackendPropertiesMixin(DevopsTerraformBuild):
         super().__init__(project, config)
         aws_mixin_config = config['AwsBackendPropertiesMixin']
         self.account_name = aws_mixin_config['account_name']
-        
+
     def backend_config(self):
         return "backend." + self.account_name + "." + self.stage + ".properties"
 
@@ -26,35 +26,48 @@ class AwsBackendPropertiesMixin(DevopsTerraformBuild):
     def copy_build_resources_from_package(self):
         super().copy_build_resources_from_package()
         self.copy_build_resource_file_from_package('aws_provider.tf')
-        self.copy_build_resource_file_from_package('aws_backend_properties_vars.tf')
-        self.copy_build_resource_file_from_package('aws_backend_with_properties.tf')
+        self.copy_build_resource_file_from_package(
+            'aws_backend_properties_vars.tf')
+        self.copy_build_resource_file_from_package(
+            'aws_backend_with_properties.tf')
 
     def init_client(self):
-        tf = Terraform(working_dir=self.build_path())
-        self.print_terraform_command('init --backend-config=' + self.backend_config())
+        tf = WorkaroundTerraform(working_dir=self.build_path())
         tf.init(backend_config=self.backend_config())
+        self.print_terraform_command(tf)
         if self.use_workspace:
             try:
                 tf.workspace('select', slef.stage)
+                self.print_terraform_command(tf)
             except:
                 tf.workspace('new', self.stage)
+                self.print_terraform_command(tf)
         return tf
 
     def plan(self):
         tf = self.init_client()
-        self.print_terraform_command('plan --var-file=' + self.backend_config())
-        tf.plan(capture_output=False, var=self.project_vars(),
+        tf.plan(capture_output=False, raise_on_error=True,
+                var=self.project_vars(),
                 var_file=self.backend_config())
+        self.print_terraform_command(tf)
 
-    def apply(self, p_auto_approve=False):
+    def apply(self, auto_approve=False):
         tf = self.init_client()
-        self.print_terraform_command('apply --var-file=' + self.backend_config())
-        tf.apply(capture_output=False, auto_approve=p_auto_approve,
-                 var=self.project_vars(), var_file=self.backend_config())
+        tf.apply(capture_output=False, raise_on_error=True,
+                 skip_plan=auto_approve,
+                 var=self.project_vars(),
+                 var_file=self.backend_config())
+        self.print_terraform_command(tf)
         self.write_output(tf)
 
-    def destroy(self, p_auto_approve=False):
+    def destroy(self, auto_approve=False):
         tf = self.init_client()
-        self.print_terraform_command('destroy --var-file=' + self.backend_config())
-        tf.destroy(capture_output=False, auto_approve=p_auto_approve,
-                   var=self.project_vars(), var_file=self.backend_config())
+        if auto_approve:
+            force = IsFlagged
+        else:
+            force = None
+        tf.destroy(capture_output=False, raise_on_error=True,
+                   force=force,
+                   var=self.project_vars(),
+                   var_file=self.backend_config())
+        self.print_terraform_command(tf)

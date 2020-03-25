@@ -25,6 +25,34 @@ def create_devops_terraform_build_config(stage, project_root_path, build_commons
                 'debug_print_terraform_command': debug_print_terraform_command})
     return ret
 
+class WorkaroundTerraform(Terraform):
+    def apply(self, dir_or_plan=None, input=False, skip_plan=False, no_color=IsFlagged,
+              **kwargs):
+        """
+        refer to https://terraform.io/docs/commands/apply.html
+        no-color is flagged by default
+        :param no_color: disable color of stdout
+        :param input: disable prompt for a missing variable
+        :param dir_or_plan: folder relative to working folder
+        :param skip_plan: force apply without plan (default: false)
+        :param kwargs: same as kwags in method 'cmd'
+        :returns return_code, stdout, stderr
+        """
+        default = kwargs
+        default['input'] = input
+        default['no_color'] = no_color
+        option_dict = self._generate_default_options(default)
+        default['auto-approve'] = (skip_plan == True)
+        args = self._generate_default_args(dir_or_plan)
+        return self.cmd('apply', *args, **option_dict)
+
+    def generate_cmd_string(self, cmd, *args, **kwargs):
+        self.latest_cmd = super().generate_cmd_string(self, cmd, *args, **kwargs)
+        return self.latest_cmd
+
+    def latest_cmd(self):
+        return self.latest_cmd
+
 
 class DevopsTerraformBuild(DevopsBuild):
 
@@ -75,19 +103,21 @@ class DevopsTerraformBuild(DevopsBuild):
         run('cp *.tfars ' + self.build_path(), shell=True)
 
     def init_client(self):
-        tf = Terraform(working_dir=self.build_path())
-        self.print_terraform_command('init')
+        tf = WorkaroundTerraform(working_dir=self.build_path())
         tf.init()
+        self.print_terraform_command(tf)
         if self.use_workspace:
             try:
-                tf.workspace('select', slef.stage)
+                tf.workspace('select', self.stage)
+                self.print_terraform_command(tf)
             except:
                 tf.workspace('new', self.stage)
+                self.print_terraform_command(tf)
         return tf
 
     def write_output(self, tf):
-        self.print_terraform_command('output -json')
         result = tf.output(json=IsFlagged)
+        self.print_terraform_command(tf)
         with open(self.build_path() + self.output_json_name, "w") as output_file:
             output_file.write(json.dumps(result))
 
@@ -97,33 +127,33 @@ class DevopsTerraformBuild(DevopsBuild):
 
     def plan(self):
         tf = self.init_client()
-        self.print_terraform_command('plan')
-        tf.plan(capture_output=False, var=self.project_vars())
+        tf.plan(capture_output=False, raise_on_error=True, var=self.project_vars())
+        self.print_terraform_command(tf)
 
-    def apply(self, p_auto_approve=False):
+    def apply(self, auto_approve=False):
         tf = self.init_client()
-        self.print_terraform_command('apply')
-        tf.apply(capture_output=False, var=self.project_vars(),skip_plan=p_auto_approve)
+        tf.apply(capture_output=False, raise_on_error=True, skip_plan=auto_approve,
+            var=self.project_vars())
+        self.print_terraform_command(tf)
         self.write_output(tf)
 
-    def destroy(self, p_auto_approve=False):
+    def destroy(self, auto_approve=False):
         tf = self.init_client()
-        self.print_terraform_command('destroy')
-        if p_auto_approve:
+        if auto_approve:
             force=IsFlagged
         else:
             force=None
-        tf.destroy(capture_output=False, force=force, var=self.project_vars())
+        tf.destroy(capture_output=False, raise_on_error=True, force=force, 
+            var=self.project_vars())
+        self.print_terraform_command(tf)
 
     def tf_import(self, tf_import_name, tf_import_resource,):
         tf = self.init_client()
-        self.print_terraform_command('import')
         tf.import_cmd(tf_import_name, tf_import_resource,
-                      capture_output=False, var=self.project_vars())
+                      capture_output=False, raise_on_error=True, var=self.project_vars())
+        self.print_terraform_command(tf)
 
-    def print_terraform_command(self, operation):
+    def print_terraform_command(self, tf):
         if self.debug_print_terraform_command:
-            output = 'cd ' + self.build_path() + ' && terraform ' + operation
-            for key, value in self.project_vars().items():
-                output = output + ' -var="' + key + '=' + value + '"'
+            output = 'cd ' + self.build_path() + ' ' + tf.latest_cmd()
             print(output)

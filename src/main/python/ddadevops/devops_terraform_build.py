@@ -7,21 +7,23 @@ from .python_util import filter_none
 from .devops_build import DevopsBuild, create_devops_build_config
 
 
-def create_devops_terraform_build_config(stage, project_root_path, build_commons_path, module,
+def create_devops_terraform_build_config(stage, project_root_path, module,
                                          additional_vars,
                                          build_dir_name='target',
                                          output_json_name='output.json',
                                          use_workspace=True,
                                          use_package_common_files=True,
+                                         build_commons_path=None,
                                          terraform_build_commons_dir_name='terraform',
                                          debug_print_terraform_command=False,
                                          additional_tfvar_files=[]):
     ret = create_devops_build_config(
-        stage, project_root_path, build_commons_path, module, build_dir_name)
+        stage, project_root_path, module, build_dir_name)
     ret.update({'additional_vars': additional_vars,
                 'output_json_name': output_json_name,
                 'use_workspace': use_workspace,
                 'use_package_common_files': use_package_common_files,
+                'build_commons_path': build_commons_path,
                 'terraform_build_commons_dir_name': terraform_build_commons_dir_name,
                 'debug_print_terraform_command': debug_print_terraform_command,
                 'additional_tfvar_files': additional_tfvar_files})
@@ -80,6 +82,7 @@ class DevopsTerraformBuild(DevopsBuild):
         self.output_json_name = config['output_json_name']
         self.use_workspace = config['use_workspace']
         self.use_package_common_files = config['use_package_common_files']
+        self.build_commons_path = config['build_commons_path']
         self.terraform_build_commons_dir_name = config['terraform_build_commons_dir_name']
         self.debug_print_terraform_command = config['debug_print_terraform_command']
         self.additional_tfvar_files = config['additional_tfvar_files']

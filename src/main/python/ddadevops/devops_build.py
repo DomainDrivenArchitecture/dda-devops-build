@@ -2,11 +2,10 @@ from subprocess import run
 from .python_util import filter_none
 
 
-def create_devops_build_config(stage, project_root_path, build_commons_path, module,
+def create_devops_build_config(stage, project_root_path, module,
                                build_dir_name='target'):
     return {'stage': stage,
             'project_root_path': project_root_path,
-            'build_commons_path': build_commons_path,
             'module': module,
             'build_dir_name': build_dir_name}
 
@@ -18,7 +17,6 @@ class DevopsBuild:
     def __init__(self, project, config):
         self.stage = config['stage']
         self.project_root_path = config['project_root_path']
-        self.build_commons_path = config['build_commons_path']
         self.module = config['module']
         self.build_dir_name = config['build_dir_name']
         self.project = project

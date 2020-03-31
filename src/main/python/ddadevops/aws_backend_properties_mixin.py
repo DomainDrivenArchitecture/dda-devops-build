@@ -14,9 +14,8 @@ class AwsBackendPropertiesMixin(DevopsTerraformBuild):
         super().__init__(project, config)
         aws_mixin_config = config['AwsBackendPropertiesMixin']
         self.account_name = aws_mixin_config['account_name']
-
-    def backend_config(self):
-        return "backend." + self.account_name + "." + self.stage + ".properties"
+        self.backend_config = "backend." + self.account_name + "." + self.stage + ".properties"
+        self.additional_tfvar_files.append(self.backend_config)
 
     def project_vars(self):
         ret = super().project_vars()
@@ -33,7 +32,7 @@ class AwsBackendPropertiesMixin(DevopsTerraformBuild):
 
     def init_client(self):
         tf = WorkaroundTerraform(working_dir=self.build_path())
-        tf.init(backend_config=self.backend_config())
+        tf.init(backend_config=self.backend_config)
         self.print_terraform_command(tf)
         if self.use_workspace:
             try:
@@ -43,31 +42,3 @@ class AwsBackendPropertiesMixin(DevopsTerraformBuild):
                 tf.workspace('new', self.stage)
                 self.print_terraform_command(tf)
         return tf
-
-    def plan(self):
-        tf = self.init_client()
-        tf.plan(capture_output=False, raise_on_error=True,
-                var=self.project_vars(),
-                var_file=self.backend_config())
-        self.print_terraform_command(tf)
-
-    def apply(self, auto_approve=False):
-        tf = self.init_client()
-        tf.apply(capture_output=False, raise_on_error=True,
-                 skip_plan=auto_approve,
-                 var=self.project_vars(),
-                 var_file=self.backend_config())
-        self.print_terraform_command(tf)
-        self.write_output(tf)
-
-    def destroy(self, auto_approve=False):
-        tf = self.init_client()
-        if auto_approve:
-            force = IsFlagged
-        else:
-            force = None
-        tf.destroy(capture_output=False, raise_on_error=True,
-                   force=force,
-                   var=self.project_vars(),
-                   var_file=self.backend_config())
-        self.print_terraform_command(tf)

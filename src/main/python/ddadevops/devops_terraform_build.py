@@ -14,7 +14,8 @@ def create_devops_terraform_build_config(stage, project_root_path, build_commons
                                          use_workspace=True,
                                          use_package_common_files=True,
                                          terraform_build_commons_dir_name='terraform',
-                                         debug_print_terraform_command=False):
+                                         debug_print_terraform_command=False,
+                                         additional_tfvar_files=[]):
     ret = create_devops_build_config(
         stage, project_root_path, build_commons_path, module, build_dir_name)
     ret.update({'additional_vars': additional_vars,
@@ -22,7 +23,8 @@ def create_devops_terraform_build_config(stage, project_root_path, build_commons
                 'use_workspace': use_workspace,
                 'use_package_common_files': use_package_common_files,
                 'terraform_build_commons_dir_name': terraform_build_commons_dir_name,
-                'debug_print_terraform_command': debug_print_terraform_command})
+                'debug_print_terraform_command': debug_print_terraform_command,
+                'additional_tfvar_files': additional_tfvar_files})
     return ret
 
 
@@ -80,6 +82,7 @@ class DevopsTerraformBuild(DevopsBuild):
         self.use_package_common_files = config['use_package_common_files']
         self.terraform_build_commons_dir_name = config['terraform_build_commons_dir_name']
         self.debug_print_terraform_command = config['debug_print_terraform_command']
+        self.additional_tfvar_files = config['additional_tfvar_files']
 
     def terraform_build_commons_path(self):
         mylist = [self.build_commons_path,
@@ -116,7 +119,7 @@ class DevopsTerraformBuild(DevopsBuild):
             self.copy_build_resources_from_dir()
         run('cp *.tf ' + self.build_path(), shell=True)
         run('cp *.properties ' + self.build_path(), shell=True)
-        run('cp *.tfars ' + self.build_path(), shell=True)
+        run('cp *.tfvars ' + self.build_path(), shell=True)
 
     def init_client(self):
         tf = WorkaroundTerraform(working_dir=self.build_path())
@@ -144,14 +147,16 @@ class DevopsTerraformBuild(DevopsBuild):
     def plan(self):
         tf = self.init_client()
         tf.plan(capture_output=False, raise_on_error=True,
-                var=self.project_vars())
+                var=self.project_vars(),
+                var_file=self.additional_tfvar_files)
         self.print_terraform_command(tf)
 
     def apply(self, auto_approve=False):
         tf = self.init_client()
         tf.apply(capture_output=False, raise_on_error=True,
                  skip_plan=auto_approve,
-                 var=self.project_vars())
+                 var=self.project_vars(),
+                 var_file=self.additional_tfvar_files)
         self.print_terraform_command(tf)
         self.write_output(tf)
 
@@ -163,13 +168,16 @@ class DevopsTerraformBuild(DevopsBuild):
             force = None
         tf.destroy(capture_output=False, raise_on_error=True,
                    force=force,
-                   var=self.project_vars())
+                   var=self.project_vars(),
+                   var_file=self.additional_tfvar_files)
         self.print_terraform_command(tf)
 
     def tf_import(self, tf_import_name, tf_import_resource,):
         tf = self.init_client()
         tf.import_cmd(tf_import_name, tf_import_resource,
-                      capture_output=False, raise_on_error=True, var=self.project_vars())
+                      capture_output=False, raise_on_error=True, 
+                      var=self.project_vars(),
+                      var_file=self.additional_tfvar_files)
         self.print_terraform_command(tf)
 
     def print_terraform_command(self, tf):

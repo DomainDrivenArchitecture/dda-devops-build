@@ -14,7 +14,7 @@ export PATH=$PATH:~/.local/bin
 # Snapshot
 1. pyb publish upload
 2. Versions nr in build.py: hochzählen, *.dev0 anfügen
-3. sudo pip3 install --pre ddadevops==0.4.0.dev0 --user
+3. sudo pip3 install --pre ddadevops==0.5.0.dev0 --user
 
 
 # Release
@@ -25,10 +25,10 @@ export PATH=$PATH:~/.local/bin
 4. git push && git push --tag
 5. Versions nr in build.py: hochzählen, *.dev0 anfügen
 7. git commit & push
-8. sudo pip3 install --pre ddadevops==0.4.0.dev0 --user
+8. sudo pip3 install --pre ddadevops==0.5.0.dev0 --user
 
 # Update to newest dev version
-pip3 install --pre ddadevops==0.4.1.dev0 --user
+pip3 install --pre ddadevops==0.5.0.dev0 --user
 
 ## License
 

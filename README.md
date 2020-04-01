@@ -6,7 +6,7 @@
 ```
 sudo apt install python3-pip
 #sudo pip3 install pip3 --upgrade
-pip3 install pybuilder ddadevops --user
+pip3 install --pre pybuilder ddadevops --user
 pip3 install boto3 python-terraform --user
 export PATH=$PATH:~/.local/bin
 ```
@@ -34,3 +34,4 @@ pip3 install --pre ddadevops==0.5.0.dev0 --user
 
 Copyright © 2019 meissa GmbH
 Licensed under the [Apache License, Version 2.0](LICENSE) (the "License")
+

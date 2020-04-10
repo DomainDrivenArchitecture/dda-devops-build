@@ -44,28 +44,28 @@ class WorkaroundTerraform(Terraform):
                          var_file,  terraform_bin_path, is_env_vars_included)
         self.latest_cmd = ''
 
-    def apply(self, dir_or_plan=None, input=False, skip_plan=False, no_color=IsFlagged,
-              **kwargs):
-        """
-        refer to https://terraform.io/docs/commands/apply.html
-        no-color is flagged by default
-        :param no_color: disable color of stdout
-        :param input: disable prompt for a missing variable
-        :param dir_or_plan: folder relative to working folder
-        :param skip_plan: force apply without plan (default: false)
-        :param kwargs: same as kwags in method 'cmd'
-        :returns return_code, stdout, stderr
-        """
-        default = kwargs
-        default['input'] = input
-        default['no_color'] = no_color
-        if skip_plan:
-            default['auto-approve'] = IsFlagged
-        else:
-            default['auto-approve'] = None
-        option_dict = self._generate_default_options(default)
-        args = self._generate_default_args(dir_or_plan)
-        return self.cmd('apply', *args, **option_dict)
+    # def apply(self, dir_or_plan=None, input=False, skip_plan=False, no_color=IsFlagged,
+    #           **kwargs):
+    #     """
+    #     refer to https://terraform.io/docs/commands/apply.html
+    #     no-color is flagged by default
+    #     :param no_color: disable color of stdout
+    #     :param input: disable prompt for a missing variable
+    #     :param dir_or_plan: folder relative to working folder
+    #     :param skip_plan: force apply without plan (default: false)
+    #     :param kwargs: same as kwags in method 'cmd'
+    #     :returns return_code, stdout, stderr
+    #     """
+    #     default = kwargs
+    #     default['input'] = input
+    #     default['no_color'] = no_color
+    #     if skip_plan:
+    #         default['auto-approve'] = IsFlagged
+    #     else:
+    #         default['auto-approve'] = None
+    #     option_dict = self._generate_default_options(default)
+    #     args = self._generate_default_args(dir_or_plan)
+    #     return self.cmd('apply', *args, **option_dict)
 
     def generate_cmd_string(self, cmd, *args, **kwargs):
         result = super().generate_cmd_string(cmd, *args, **kwargs)
@@ -149,7 +149,7 @@ class DevopsTerraformBuild(DevopsBuild):
 
     def plan(self):
         tf = self.init_client()
-        tf.plan(capture_output=False, raise_on_error=True,
+        tf.plan(capture_output=False, raise_on_error=False,
                 var=self.project_vars(),
                 var_file=self.additional_tfvar_files)
         self.print_terraform_command(tf)

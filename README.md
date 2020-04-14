@@ -145,13 +145,14 @@ def access(project):
 
 # Release
 1. Versions nr in build.py: *.dev0 entfernen
-1. git commit -m "release"
+1. git commit -am "release"
 2. git tag [version]
 3. pyb publish upload
 4. git push && git push --tag
 5. Versions nr in build.py: hochzählen, *.dev0 anfügen
-7. git commit & push
-8. sudo pip3 install --pre ddadevops==0.5.0.dev0 --user
+7. git commit -am "version bump"
+8. git push
+9. sudo pip3 install ddadevops==0.5.0 --user
 
 # Update to newest dev version
 pip3 install --pre ddadevops==0.5.0.dev0 --user

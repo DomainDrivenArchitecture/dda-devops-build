@@ -1,11 +1,16 @@
 from subprocess import check_output, call
 import os
 import sys
+import deprecation
 
+@deprecation.deprecated(deprecated_in="0.5.0", removed_in="1.0",
+                        details='use gopass_password_from_path(os.environ.get(env_var, None)) instead')
 def gopass_credential_from_env_path (env_var):
     env_path = os.environ.get(env_var, None)
     return gopass_password_from_path(env_path)
 
+@deprecation.deprecated(deprecated_in="0.5.0", removed_in="1.0",
+                        details='use gopass_password_from_path(path) instead')
 def gopass_credential_from_path (path):
     return gopass_password_from_path(path)
 

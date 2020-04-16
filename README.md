@@ -8,8 +8,10 @@ sudo apt install python3-pip
 sudo pip3 install pip3 --upgrade --user
 pip3 install --pre pybuilder ddadevops deprecation --user
 export PATH=$PATH:~/.local/bin
+
 # in case of using terraform
 pip3 install python-terraform --user
+
 # in case of using AwsMixin
 pip3 install boto3 --user
 ```

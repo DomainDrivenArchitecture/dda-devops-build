@@ -2,7 +2,19 @@
 
 [![Slack](https://img.shields.io/badge/chat-clojurians-green.svg?style=flat)](https://clojurians.slack.com/messages/#dda-pallet/) | [<img src="https://meissa-gmbh.de/img/community/Mastodon_Logotype.svg" width=20 alt="team@social.meissa-gmbh.de"> team@social.meissa-gmbh.de](https://social.meissa-gmbh.de/@team) | [Website & Blog](https://domaindrivenarchitecture.org)
 
+dda-devops-build provide a envioronment to tie several DevOps tools together for easy interoperation. Supported tools are:
+* aws with
+  * simple api-key auth
+  * mfa & assume-role auth
+* hetzner with simple api-key auth
+* terraform v0.11, v0.12 supporting
+  * local file backends
+  * s3 backends
+* user / team credentials managed by gopass
+* dda-pallet
+
 # Setup
+
 ```
 sudo apt install python3-pip
 sudo pip3 install pip3 --upgrade --user
@@ -14,9 +26,13 @@ pip3 install python-terraform --user
 
 # in case of using AwsMixin
 pip3 install boto3 --user
+
+# in case of using AwsMfaMixin
+pip3 install boto3 mfa --user
 ```
 
 # Example Build
+
 lets assume the following poject structure
 
 ```
@@ -79,6 +95,7 @@ def tf_import(project):
 ```
 
 ## Feature aws-backend
+
 Will use a file `backend.dev.live.properties` where dev is the [account-name], live is the  [stage].
 
 the backend.dev.live.properties file content:
@@ -111,6 +128,7 @@ def initialize(project):
 ```
 
 ## Feature aws-mfa-assume-role
+
 In order to use aws assume role in combination with the mfa-tool (`pip install mfa`):
 
 the build.py file content:
@@ -142,13 +160,15 @@ def access(project):
     build.get_mfa_session()
 ```
 
-# Snapshot
+# Releasing and updating
+## Publish snapshot
+
 1. pyb publish upload
 2. Versions nr in build.py: hochzählen, *.dev0 anfügen
 3. sudo pip3 install --pre ddadevops==0.5.0.dev0 --user
 
 
-# Release
+## Release
 1. Versions nr in build.py: *.dev0 entfernen
 1. git commit -am "release"
 2. git tag [version]
@@ -159,10 +179,10 @@ def access(project):
 8. git push
 9. sudo pip3 install ddadevops==0.5.0 --user
 
-# Update to newest dev version
+## Update to newest dev version
 pip3 install --pre ddadevops==0.5.0.dev0 --user
 
-## License
+# License
 
 Copyright © 2019 meissa GmbH
 Licensed under the [Apache License, Version 2.0](LICENSE) (the "License")

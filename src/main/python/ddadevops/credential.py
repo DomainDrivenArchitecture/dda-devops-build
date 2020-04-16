@@ -19,7 +19,7 @@ def gopass_field_from_path (path, field):
     credential = None
 
     if path and field:
-        print('get credential for: ' + path)
+        print('get field for: ' + path + ', ' + field)
         if sys.version_info.major == 3:
             credential = check_output(['gopass', 'show', path, field], encoding='UTF-8')
         else:
@@ -31,7 +31,7 @@ def gopass_password_from_path (path):
     credential = None
 
     if path:
-        print('get credential for: ' + path)
+        print('get password for: ' + path)
         if sys.version_info.major == 3:
             credential = check_output(['gopass', 'show', '--password', path], encoding='UTF-8')
         else:

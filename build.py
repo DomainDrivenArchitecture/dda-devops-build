@@ -28,7 +28,7 @@ use_plugin("python.distutils")
 default_task = "publish"
 
 name = "ddadevops"
-version = "0.6.0.dev3"
+version = "0.6.0.dev6"
 summary = "tools to support builds combining gopass, terraform, dda-pallet, aws & hetzner-cloud"
 description = __doc__
 authors = [Author("meissa GmbH", "buero@meissa-gmbh.de")]
@@ -48,8 +48,10 @@ def initialize(project):
     project.set_property("copy_resources_target", "$dir_dist/ddadevops")
     project.get_property("copy_resources_glob").append("LICENSE")
     project.get_property("copy_resources_glob").append("src/main/resources/terraform/*")
+    project.get_property("copy_resources_glob").append("src/main/resources/docker/image/resources/*")
     project.include_file("ddadevops", "LICENSE")
     project.include_file("ddadevops", "src/main/resources/terraform/*")
+    project.include_file("ddadevops", "src/main/resources/docker/image/resources/*")
     
     #project.set_property('distutils_upload_sign', True)
     #project.set_property('distutils_upload_sign_identity', '')

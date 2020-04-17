@@ -1,6 +1,4 @@
-from subprocess import check_output, call
-import os
-import sys
+from .python_util import *
 import deprecation
 
 @deprecation.deprecated(deprecated_in="0.5.0", removed_in="1.0",
@@ -17,25 +15,15 @@ def gopass_credential_from_path (path):
 
 def gopass_field_from_path (path, field):
     credential = None
-
     if path and field:
         print('get field for: ' + path + ', ' + field)
-        if sys.version_info.major == 3:
-            credential = check_output(['gopass', 'show', path, field], encoding='UTF-8')
-        else:
-            credential = check_output(['gopass', 'show', path, field])
-
+        credential = execute(['gopass', 'show', path, field])
     return credential
 
 def gopass_password_from_path (path):
     credential = None
-
     if path:
         print('get password for: ' + path)
-        if sys.version_info.major == 3:
-            credential = check_output(['gopass', 'show', '--password', path], encoding='UTF-8')
-        else:
-            credential = check_output(['gopass', 'show', '--password', path])
-
+        credential = execute(['gopass', 'show', '--password', path])
     return credential
 

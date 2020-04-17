@@ -7,7 +7,9 @@ from .python_util import filter_none
 from .devops_build import DevopsBuild, create_devops_build_config
 
 
-def create_devops_terraform_build_config(stage, project_root_path, module,
+def create_devops_terraform_build_config(stage,
+                                         project_root_path,
+                                         module,
                                          additional_vars,
                                          build_dir_name='target',
                                          output_json_name='output.json',
@@ -178,7 +180,7 @@ class DevopsTerraformBuild(DevopsBuild):
     def tf_import(self, tf_import_name, tf_import_resource,):
         tf = self.init_client()
         tf.import_cmd(tf_import_name, tf_import_resource,
-                      capture_output=False, raise_on_error=True, 
+                      capture_output=False, raise_on_error=True,
                       var=self.project_vars(),
                       var_file=self.additional_tfvar_files)
         self.print_terraform_command(tf)

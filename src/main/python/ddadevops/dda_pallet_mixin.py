@@ -38,29 +38,29 @@ class DdaPalletMixin(DevopsBuild):
         run('cp *.edn ' + self.build_path(), shell=True)
 
     def dda_write_target(self, node_name, ipv4):
-        with open(self.build_path() + self.target_edn_name, "w") as output_file:
+        with open(self.build_path() + '/' + self.target_edn_name, "w") as output_file:
             output_file.write(
                 self.target_template.substitute({'ipv4': ipv4, 'node_name': node_name}))
 
     def dda_write_domain(self, substitues):
-        with open(self.build_path() + self.domain_file_name, "r") as input_file:
+        with open(self.build_path() + '/' + self.domain_file_name, "r") as input_file:
             domain_input=input_file.read()
         domain_template=Template(domain_input)
-        with open(self.build_path() + 'out_' + self.domain_file_name, "w") as output_file:
+        with open(self.build_path() + '/out_' + self.domain_file_name, "w") as output_file:
             output_file.write(domain_template.substitute(substitues))
 
     def dda_uberjar(self, configure_switch = None):
         if configure_switch:
-            cmd=['java', '-jar', self.project_root_path() + self.jar_file,
-                   '--targets', self.build_path() + self.target_edn_name,
+            cmd=['java', '-jar', self.project_root_path + '/' + self.jar_file,
+                   '--targets', self.build_path() + '/' + self.target_edn_name,
                    '--tenant', self.tenant, '--application', self.application,
                    '--configure',
-                   self.build_path() + 'out_' + self.domain_file_name]
+                   self.build_path() + '/out_' + self.domain_file_name]
         else:
-            cmd = ['java', '-jar', self.project_root_path() + self.jar_file,
-                   '--targets', self.build_path() + self.target_edn_name,
+            cmd = ['java', '-jar', self.project_root_path + '/' + self.jar_file,
+                   '--targets', self.build_path() + '/' + self.target_edn_name,
                    '--tenant', self.tenant, '--application', self.application,
-                   self.build_path() + 'out_' + self.domain_file_name]
+                   self.build_path() + '/out_' + self.domain_file_name]
         prn_cmd = list(cmd)
         print(" ".join(prn_cmd))
         output = execute(cmd)

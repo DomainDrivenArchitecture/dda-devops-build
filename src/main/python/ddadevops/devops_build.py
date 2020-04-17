@@ -19,6 +19,7 @@ class DevopsBuild:
         self.project_root_path = config['project_root_path']
         self.module = config['module']
         self.build_dir_name = config['build_dir_name']
+        self.stack = {}
         self.project = project
         project.set_property('devops_build', self)
 
@@ -35,3 +36,9 @@ class DevopsBuild:
     def initialize_build_dir(self):
         run('rm -rf ' + self.build_path(), shell=True)
         run('mkdir -p ' + self.build_path(), shell=True)
+
+    def put(self, key, value):
+        self.stack[key] = value
+
+    def get(self, key):
+        return self.stack[key]

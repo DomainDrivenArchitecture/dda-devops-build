@@ -2,6 +2,7 @@ from subprocess import run
 from .python_util import filter_none
 from pkg_resources import *
 from .devops_terraform_build import DevopsBuild, create_devops_build_config
+import sys
 
 
 def create_devops_docker_build_config(stage,
@@ -40,6 +41,7 @@ class DevopsDockerBuild(DevopsBuild):
         return '/'.join(filter_none(mylist)) + '/'
 
     def copy_build_resource_file_from_package(self, name):
+        run('mkdir -p ' + self.build_path(), shell=True)
         my_data = resource_string(
             __name__, "src/main/resources/docker/" + name)
         with open(self.build_path() + '/' + name, "w") as output_file:

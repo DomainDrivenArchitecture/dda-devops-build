@@ -5,6 +5,7 @@ from pkg_resources import *
 from python_terraform import *
 from .python_util import filter_none
 from .devops_build import DevopsBuild, create_devops_build_config
+import sys
 
 
 def create_devops_terraform_build_config(stage,

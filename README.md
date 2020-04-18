@@ -173,7 +173,7 @@ A full working example: [doc/example/50_docker_module](doc/example/50_docker_mod
 
 1. pyb publish upload
 2. Versions nr in build.py: hochzählen, *.dev0 anfügen
-3. sudo pip3 install --pre ddadevops==0.5.0.dev0 --user
+3. sudo pip3 install --pre ddadevops==0.6.1.dev0 --user
 
 
 ## Release
@@ -185,10 +185,10 @@ A full working example: [doc/example/50_docker_module](doc/example/50_docker_mod
 5. Versions nr in build.py: hochzählen, *.dev0 anfügen
 7. git commit -am "version bump"
 8. git push
-9. sudo pip3 install ddadevops==0.5.0 --user
+9. sudo pip3 install ddadevops==0.6.0 --user
 
 ## Update to newest dev version
-pip3 install --pre ddadevops==0.5.0.dev0 --user
+pip3 install --pre ddadevops==0.6.1.dev0 --user
 
 # License
 

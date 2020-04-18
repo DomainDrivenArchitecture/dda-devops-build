@@ -10,6 +10,7 @@ dda-devops-build provide a envioronment to tie several DevOps tools together for
 * terraform v0.11, v0.12 supporting
   * local file backends
   * s3 backends
+* docker / dockerhub
 * user / team credentials managed by gopass
 * dda-pallet
 
@@ -18,7 +19,7 @@ dda-devops-build provide a envioronment to tie several DevOps tools together for
 ```
 sudo apt install python3-pip
 sudo pip3 install pip3 --upgrade --user
-pip3 install --pre pybuilder ddadevops deprecation --user
+pip3 install pybuilder ddadevops deprecation --user
 export PATH=$PATH:~/.local/bin
 
 # in case of using terraform
@@ -159,6 +160,13 @@ def access(project):
     build = get_devops_build(project)
     build.get_mfa_session()
 ```
+
+## Feature DdaDockerBuild
+
+The docker build supports image building, tagging, testing and login to dockerhost.
+For bash based builds we support often used script-parts as predefined functions [see install_functions.sh](src/main/resources/docker/image/resources/install_functions.sh).
+
+A full working example: [doc/example/50_docker_module](doc/example/50_docker_module)
 
 # Releasing and updating
 ## Publish snapshot

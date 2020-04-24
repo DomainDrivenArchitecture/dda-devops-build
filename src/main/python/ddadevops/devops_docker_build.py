@@ -1,7 +1,7 @@
 from subprocess import run
 from .python_util import filter_none
 from pkg_resources import *
-from .devops_terraform_build import DevopsBuild, create_devops_build_config
+from .devops_build import DevopsBuild, create_devops_build_config
 import sys
 
 

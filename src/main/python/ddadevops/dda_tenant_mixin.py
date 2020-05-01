@@ -4,8 +4,8 @@ from .python_util import *
 from .devops_build import DevopsBuild
 
 
-def add_dda_pallet_mixin_config(config, tenant, application, domain_file_name):
-    config.update({'DdaPalletMixin':
+def add_dda_tenant_mixin_config(config, tenant, application, domain_file_name):
+    config.update({'DdaTenantMixin':
                    {'tenant': tenant,
                     'application': application,
                     'domain_file_name': domain_file_name,
@@ -20,11 +20,11 @@ def add_dda_pallet_mixin_config(config, tenant, application, domain_file_name):
     return config
 
 
-class DdaPalletMixin(DevopsBuild):
+class DdaTenantMixin(DevopsBuild):
 
     def __init__(self, project, config):
         super().__init__(project, config)
-        dda_pallet_mixin_config = config['DdaPalletMixin']
+        dda_pallet_mixin_config = config['DdaTenantMixin']
         self.tenant = dda_pallet_mixin_config['tenant']
         self.application = dda_pallet_mixin_config['application']
         self.domain_file_name = dda_pallet_mixin_config['domain_file_name']

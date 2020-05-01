@@ -11,6 +11,7 @@ from .devops_docker_build import DevopsDockerBuild, create_devops_docker_build_c
 from .hetzner_mixin import HetznerMixin, add_hetzner_mixin_config
 from .aws_backend_properties_mixin import AwsBackendPropertiesMixin, add_aws_backend_properties_mixin_config
 from .aws_mfa_mixin import AwsMfaMixin, add_aws_mfa_mixin_config
-from .dda_pallet_mixin import DdaPalletMixin, add_dda_pallet_mixin_config
+from .dda_tenant_mixin import DdaTenantMixin, add_dda_tenant_mixin_config
+from .dda_simple_mixin import DdaSimpleMixin, add_dda_simple_mixin_config
 
 __version__ = "${version}"

@@ -15,6 +15,7 @@ def get_devops_build(project):
 class DevopsBuild:
 
     def __init__(self, project, config):
+        #deprecate stage
         self.stage = config['stage']
         self.project_root_path = config['project_root_path']
         self.module = config['module']

@@ -172,23 +172,20 @@ A full working example: [doc/example/50_docker_module](doc/example/50_docker_mod
 ## Publish snapshot
 
 1. pyb publish upload
-2. Versions nr in build.py: hochzählen, *.dev0 anfügen
-3. sudo pip3 install --pre ddadevops==0.6.1.dev0 --user
+2. sudo pip3 install --pre ddadevops==0.7.0.devxxx --user
 
 
 ## Release
-1. Versions nr in build.py: *.dev0 entfernen
+1. Versions nr in build.py: *.dev entfernen
 1. git commit -am "release"
 2. git tag [version]
 3. pyb publish upload
 4. git push && git push --tag
-5. Versions nr in build.py: hochzählen, *.dev0 anfügen
+5. Versions nr in build.py: hochzählen, *.dev anfügen
 7. git commit -am "version bump"
 8. git push
-9. sudo pip3 install ddadevops==0.6.0 --user
+9. sudo pip3 install ddadevops==0.7.0 --user
 
-## Update to newest dev version
-pip3 install --pre ddadevops==0.6.1.dev0 --user
 
 # License
 

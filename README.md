@@ -184,7 +184,7 @@ A full working example: [doc/example/50_docker_module](doc/example/50_docker_mod
 5. Versions nr in build.py: hochzählen, *.dev anfügen
 7. git commit -am "version bump"
 8. git push
-9. pip3 install ddadevops==0.7.0 --user
+9. pip3 install ddadevops==0.7.1 --user
 
 
 # License

@@ -191,4 +191,3 @@ A full working example: [doc/example/50_docker_module](doc/example/50_docker_mod
 
 Copyright © 2019 meissa GmbH
 Licensed under the [Apache License, Version 2.0](LICENSE) (the "License")
-

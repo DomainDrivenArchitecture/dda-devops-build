@@ -30,6 +30,12 @@ class AwsBackendPropertiesMixin(DevopsTerraformBuild):
         self.copy_build_resource_file_from_package(
             'aws_backend_with_properties.tf')
 
+    def copy_local_state(self):
+        pass
+
+    def rescue_local_state(self):
+        pass
+
     def init_client(self):
         tf = WorkaroundTerraform(working_dir=self.build_path())
         tf.init(backend_config=self.backend_config)

@@ -94,16 +94,26 @@ class DevopsTerraformBuild(DevopsBuild):
         run('cp -f ' + self.terraform_build_commons_path() +
             '* ' + self.build_path(), shell=True)
 
+    def copy_local_state(self):
+        run('cp terraform.tfstate '  + self.build_path(), shell=True)
+
+    def rescue_local_state(self):
+        run('cp ' + self.build_path() + '/terraform.tfstate .', shell=True)
+
     def initialize_build_dir(self):
         super().initialize_build_dir()
         if self.use_package_common_files:
             self.copy_build_resources_from_package()
         else:
             self.copy_build_resources_from_dir()
+        self.copy_local_state()
         run('cp *.tf ' + self.build_path(), shell=True)
-        run('cp *.properties ' + self.build_path(), shell=True)
+        run('cp *.properties ' + self.build_path(), shell=True)       
         run('cp *.tfvars ' + self.build_path(), shell=True)
 
+    def post_build(self):
+        self.rescue_local_state()
+        
     def init_client(self):
         tf = WorkaroundTerraform(working_dir=self.build_path())
         tf.init()
@@ -132,6 +142,7 @@ class DevopsTerraformBuild(DevopsBuild):
         tf.plan(capture_output=False, raise_on_error=False,
                 var=self.project_vars(),
                 var_file=self.additional_tfvar_files)
+        self.post_build()
         self.print_terraform_command(tf)
 
     def apply(self, auto_approve=False):
@@ -140,8 +151,9 @@ class DevopsTerraformBuild(DevopsBuild):
                  skip_plan=auto_approve,
                  var=self.project_vars(),
                  var_file=self.additional_tfvar_files)
-        self.print_terraform_command(tf)
         self.write_output(tf)
+        self.post_build()
+        self.print_terraform_command(tf)
 
     def destroy(self, auto_approve=False):
         tf = self.init_client()
@@ -153,6 +165,7 @@ class DevopsTerraformBuild(DevopsBuild):
                    force=force,
                    var=self.project_vars(),
                    var_file=self.additional_tfvar_files)
+        self.post_build()
         self.print_terraform_command(tf)
 
     def tf_import(self, tf_import_name, tf_import_resource,):
@@ -161,6 +174,7 @@ class DevopsTerraformBuild(DevopsBuild):
                       capture_output=False, raise_on_error=True,
                       var=self.project_vars(),
                       var_file=self.additional_tfvar_files)
+        self.post_build()
         self.print_terraform_command(tf)
 
     def print_terraform_command(self, tf):

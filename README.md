@@ -168,6 +168,46 @@ For bash based builds we support often used script-parts as predefined functions
 
 A full working example: [doc/example/50_docker_module](doc/example/50_docker_module)
 
+## Feature AwsRdsPgMixin
+
+The AwsRdsPgMixin provides 
+* execute_pg_rds_sql - function will optionally resolve dns-c-names for trusted ssl-handshakes
+* alter_db_user_password
+* add_new_user
+* deactivate_user
+
+the build.py file content:
+```
+class MyBuild(..., AwsRdsPgMixin):
+    pass
+
+
+@init
+def initialize(project):
+    project.build_depends_on('ddadevops>=0.8.0')
+
+    ...
+    config = add_aws_rds_pg_mixin_config(config,
+                                         stage + "-db.bcsimport.kauf." + account_name + ".breuni.de",
+                                         "kauf_bcsimport",
+                                         rds_resolve_dns=True,)
+    build = MyBuild(project, config)
+    build.initialize_build_dir()
+
+@task
+def rotate_credentials_in(project):
+    build = get_devops_build(project)
+    build.alter_db_user_password('/postgres/support')
+    build.alter_db_user_password('/postgres/superuser')
+    build.add_new_user('/postgres/superuser', '/postgres/app', 'pg_group_role')
+
+
+@task
+def rotate_credentials_out(project):
+    build = get_devops_build(project)
+    build.deactivate_user('/postgres/superuser', 'old_user_name')
+```
+
 # Releasing and updating
 ## Publish snapshot
 

@@ -1,15 +1,15 @@
 from python_terraform import *
 from boto3 import *
-from .credential import gopass_credential_from_env_path
 from .python_util import execute
 from .aws_backend_properties_mixin import AwsBackendPropertiesMixin
 
 
 def add_aws_mfa_mixin_config(config, account_id, region,
-mfa_role='developer', mfa_account_prefix='', mfa_login_account_suffix='main'):
+                             mfa_role='developer', mfa_account_prefix='', 
+                             mfa_login_account_suffix='main'):
     config.update({'AwsMfaMixin':
                    {'account_id': account_id,
-                    'region': region, 
+                    'region': region,
                     'mfa_role': mfa_role,
                     'mfa_account_prefix': mfa_account_prefix,
                     'mfa_login_account_suffix': mfa_login_account_suffix}})
@@ -38,7 +38,7 @@ class AwsMfaMixin(AwsBackendPropertiesMixin):
                     'mfa_account_prefix': self.mfa_account_prefix,
                     'mfa_login_account_suffix': self.mfa_login_account_suffix})
         return ret
-    
+
     def get_username_from_account(self, p_account_name):
         login_id = execute('cat ~/.aws/accounts | grep -A 2 "\[' + p_account_name +
                            '\]"  | grep username | awk -F= \'{print $2}\'', shell=True)

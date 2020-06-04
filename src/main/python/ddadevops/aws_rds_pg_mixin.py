@@ -40,37 +40,28 @@ class AwsRdsPgMixin(DevopsBuild):
         return result
 
     def alter_db_user_password(self, gopass_path):
-        user_name = gopass_field_from_path(
-            self.gopass_stage() + gopass_path, 'user')
-        user_old_password = gopass_field_from_path(
-            self.gopass_stage() + gopass_path, 'old-password')
-        user_new_password = gopass_password_from_path(
-            self.gopass_stage() + gopass_path)
+        user_name = gopass_field_from_path(gopass_path, 'user')
+        user_old_password = gopass_field_from_path(gopass_path, 'old-password')
+        user_new_password = gopass_password_from_path(gopass_path)
 
         self.execute_pg_rds_sql(user_name, user_old_password,
                                 "ALTER ROLE " + user_name + " WITH PASSWORD '" + user_new_password + "';")
-        print("changed password:", self.gopass_stage(), ',', user_name)
+        print("changed password:", user_name)
 
     def add_new_user(self, gopass_path_superuser, gopass_path_new_user, group_role):
-        superuser_name = gopass_field_from_path(
-            self.gopass_stage() + gopass_path_superuser, 'user')
-        superuser_password = gopass_password_from_path(
-            self.gopass_stage() + gopass_path_superuser)
-        new_user_name = gopass_field_from_path(
-            self.gopass_stage() + gopass_path_new_user, 'user')
-        new_user_password = gopass_password_from_path(
-            self.gopass_stage() + gopass_path_new_user)
+        superuser_name = gopass_field_from_path(gopass_path_superuser, 'user')
+        superuser_password = gopass_password_from_path(gopass_path_superuser)
+        new_user_name = gopass_field_from_path(gopass_path_new_user, 'user')
+        new_user_password = gopass_password_from_path(gopass_path_new_user)
 
         self.execute_pg_rds_sql(superuser_name, superuser_password,
                                 "CREATE ROLE " + new_user_name + " WITH LOGIN INHERIT PASSWORD '" + new_user_password + "';" +
                                 "GRANT " + group_role + " TO " + new_user_name + ";")
-        print("created user:", self.gopass_stage(), ',', new_user_name)
+        print("created user:", new_user_name)
 
     def deactivate_user(self, gopass_path_superuser, to_remove_user_name):
-        superuser_name = gopass_field_from_path(
-            self.gopass_stage() + gopass_path_superuser, 'user')
-        superuser_password = gopass_password_from_path(
-            self.gopass_stage() + gopass_path_superuser)
+        superuser_name = gopass_field_from_path(gopass_path_superuser, 'user')
+        superuser_password = gopass_password_from_path(gopass_path_superuser)
 
         owned_by_wrong_user = self.execute_pg_rds_sql(superuser_name, superuser_password,
                                                       "SELECT count(*) FROM pg_class c, pg_user u WHERE c.relowner = u.usesysid " +

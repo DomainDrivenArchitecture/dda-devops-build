@@ -110,6 +110,7 @@ class DevopsTerraformBuild(DevopsBuild):
         run('cp *.tf ' + self.build_path(), shell=True)
         run('cp *.properties ' + self.build_path(), shell=True)       
         run('cp *.tfvars ' + self.build_path(), shell=True)
+        run('cp -r scripts ' + self.build_path(), shell=True)
 
     def post_build(self):
         self.rescue_local_state()

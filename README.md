@@ -212,7 +212,7 @@ def rotate_credentials_out(project):
 ## Publish snapshot
 
 1. pyb publish upload
-2. sudo pip3 install --pre ddadevops==0.7.0.devxxx --user
+2. sudo pip3 install --user --pre ddadevops==0.8.3.devxxx
 
 
 ## Release
@@ -224,7 +224,7 @@ def rotate_credentials_out(project):
 5. Versions nr in build.py: hochzählen, *.dev anfügen
 7. git commit -am "version bump"
 8. git push
-9. pip3 install ddadevops==0.7.1 --user
+9. pip3 install --upgrade --user ddadevops
 
 
 # License

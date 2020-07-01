@@ -146,6 +146,15 @@ class DevopsTerraformBuild(DevopsBuild):
         self.post_build()
         self.print_terraform_command(tf)
 
+    def plan_fail_on_diff(self):
+        tf = self.init_client()
+        tf.plan(detailed_exitcode=IsFlagged, capture_output=False, raise_on_error=False,
+                var=self.project_vars(),
+                var_file=self.additional_tfvar_files)
+        self.post_build()
+        self.print_terraform_command(tf)
+
+
     def apply(self, auto_approve=False):
         tf = self.init_client()
         tf.apply(capture_output=False, raise_on_error=True,

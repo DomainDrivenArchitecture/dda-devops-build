@@ -1,7 +1,7 @@
 name: release dev
 on:
   push:
-    ignore-tags: '[0-9]+.[0-9]+.[0-9]+'
+    ignore-tags: '[0-9]+.[0-9]+.[0-9]'
 
 jobs:
   dev-release:
@@ -10,18 +10,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-
-    - name: Cache node modules
-      uses: actions/cache@v2
-      env:
-        cache-name: cache-node-modules
-      with:
-        path: /usr/lib/python3/
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
           
     - name: Use python 3.x
       uses: actions/setup-python@v2

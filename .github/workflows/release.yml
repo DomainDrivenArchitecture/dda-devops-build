@@ -34,7 +34,7 @@ jobs:
         pip install pybuilder ddadevops deprecation setuptools
     
     - name: build em
-    env:
+      env:
         TWINE_USERNAME: dda
         TWINE_PASSWORD: ${{ secrets.PYPI_DDA }}
       run: |

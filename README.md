@@ -219,7 +219,7 @@ def rotate_credentials_out(project):
 1. remove "dev" from version no in build.py
 1. git commit -am "release"
 2. git tag [version]
-4. git push && git push --tag
+4. git push --tag
 5. increase version no in build.py & append *.dev
 7. git commit -am "version bump"
 8. git push

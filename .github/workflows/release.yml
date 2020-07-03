@@ -22,7 +22,8 @@ jobs:
 
     - name: debug
       run: |
-        echo ${{ github.tag }}
+        echo ${{ github.event }}
+        echo ${{ github.href }}
         echo ${{ github.tag == '[0-9]+.[0-9]+.[0-9]' }}
         echo ${{ github.tag != '[0-9]+.[0-9]+.[0-9]' }}
     

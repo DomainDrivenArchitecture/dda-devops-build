@@ -19,6 +19,12 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install pybuilder ddadevops deprecation setuptools
+
+    - debug:
+      run: |
+        echo ${{ github.tag }}
+        echo ${{ github.tag == '[0-9]+.[0-9]+.[0-9]' }}
+        echo ${{ github.tag != '[0-9]+.[0-9]+.[0-9]' }}
     
     - name: build stable release
       if: ${{ github.tag == '[0-9]+.[0-9]+.[0-9]' }}

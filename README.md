@@ -217,6 +217,7 @@ def rotate_credentials_out(project):
 
 ## Release
 1. git commit -am "release"
+1. git tag -am "release" version
 2. git push --follow-tags
 3. increase version no in build.py
 4. git commit -am "version bump"

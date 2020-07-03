@@ -1,6 +1,8 @@
 name: build
 on:
-  never
+  push:
+    tags:
+      - never
 
 jobs:
   build:

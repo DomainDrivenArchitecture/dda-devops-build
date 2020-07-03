@@ -216,14 +216,12 @@ def rotate_credentials_out(project):
 1. every push will be published as dev-dependency
 
 ## Release
-1. remove "dev" from version no in build.py
 1. git commit -am "release"
-2. git tag [version]
-4. git push --tag
-5. increase version no in build.py & append *.dev
-7. git commit -am "version bump"
-8. git push
-9. pip3 install --upgrade --user ddadevops
+2. git push --follow-tags
+3. increase version no in build.py
+4. git commit -am "version bump"
+5. git push
+6. pip3 install --upgrade --user ddadevops
 
 
 # License

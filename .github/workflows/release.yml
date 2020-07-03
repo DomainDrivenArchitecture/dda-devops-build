@@ -20,7 +20,16 @@ jobs:
         python -m pip install --upgrade pip
         pip install pybuilder ddadevops deprecation setuptools
     
-    - name: build em
+    - name: build stable release
+      if: ${{ github.tag == '[0-9]+.[0-9]+.[0-9]' }}
+      env:
+        TWINE_USERNAME: dda
+        TWINE_PASSWORD: ${{ secrets.PYPI_DDA }}
+      run: |
+        pyb -P version=${{ github.tag }} publish upload
+
+    - name: build unstable release
+      if: ${{ github.tag != '[0-9]+.[0-9]+.[0-9]' }}
       env:
         TWINE_USERNAME: dda
         TWINE_PASSWORD: ${{ secrets.PYPI_DDA }}

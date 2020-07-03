@@ -9,13 +9,25 @@ on:
 
 jobs:
   build:
-    name: test-my build
+    name: unstable
     runs-on: ubuntu-latest
 
     steps:
-    
-    - name: debug
+    - uses: actions/checkout@v2
+          
+    - name: Use python 3.x
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: install dependencies
       run: |
-        echo ${{ github.ref }}
-        echo ${{ github.ref == '[0-9]+.[0-9]+.[0-9]+' }}
-        echo ${{ github.ref != '[0-9]+.[0-9]+.[0-9]+' }}
+        python -m pip install --upgrade pip
+        pip install pybuilder ddadevops deprecation setuptools
+
+    - name: build unstable release
+      env:
+        TWINE_USERNAME: dda
+        TWINE_PASSWORD: ${{ secrets.PYPI_DDA }}
+      run: |
+        pyb publish upload

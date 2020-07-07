@@ -148,7 +148,7 @@ class DevopsTerraformBuild(DevopsBuild):
 
     def plan_fail_on_diff(self):
         tf = self.init_client()
-        return_code = tf.plan(detailed_exitcode=IsFlagged, capture_output=False, raise_on_error=False,
+        return_code, stdout, stderr = tf.plan(detailed_exitcode=IsFlagged, capture_output=False, raise_on_error=False,
                 var=self.project_vars(),
                 var_file=self.additional_tfvar_files)
         self.post_build()

@@ -154,8 +154,7 @@ class DevopsTerraformBuild(DevopsBuild):
         self.post_build()
         self.print_terraform_command(tf)
         if (return_code > 0):
-            sys.exit(return_code)
-
+            raise Exception(return_code, "Diff in Config found:", stderr)
 
     def apply(self, auto_approve=False):
         tf = self.init_client()

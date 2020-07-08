@@ -140,11 +140,13 @@ class DevopsTerraformBuild(DevopsBuild):
 
     def plan(self):
         tf = self.init_client()
-        tf.plan(capture_output=False, raise_on_error=False,
+        return_code, stdout, stderr = tf.plan(capture_output=False, raise_on_error=False,
                 var=self.project_vars(),
                 var_file=self.additional_tfvar_files)
         self.post_build()
         self.print_terraform_command(tf)
+        if (return_code > 0):
+            raise Exception(return_code, "Diff in Config found:", stderr)
 
     def plan_fail_on_diff(self):
         tf = self.init_client()
@@ -158,13 +160,15 @@ class DevopsTerraformBuild(DevopsBuild):
 
     def apply(self, auto_approve=False):
         tf = self.init_client()
-        tf.apply(capture_output=False, raise_on_error=True,
+        return_code, stdout, stderr = tf.apply(capture_output=False, raise_on_error=True,
                  skip_plan=auto_approve,
                  var=self.project_vars(),
                  var_file=self.additional_tfvar_files)
         self.write_output(tf)
         self.post_build()
         self.print_terraform_command(tf)
+        if (return_code > 0):
+            raise Exception(return_code, "Diff in Config found:", stderr)
 
     def destroy(self, auto_approve=False):
         tf = self.init_client()
@@ -172,21 +176,25 @@ class DevopsTerraformBuild(DevopsBuild):
             force = IsFlagged
         else:
             force = None
-        tf.destroy(capture_output=False, raise_on_error=True,
+        return_code, stdout, stderr = tf.destroy(capture_output=False, raise_on_error=True,
                    force=force,
                    var=self.project_vars(),
                    var_file=self.additional_tfvar_files)
         self.post_build()
         self.print_terraform_command(tf)
+        if (return_code > 0):
+            raise Exception(return_code, "Diff in Config found:", stderr)
 
     def tf_import(self, tf_import_name, tf_import_resource,):
         tf = self.init_client()
-        tf.import_cmd(tf_import_name, tf_import_resource,
+        return_code, stdout, stderr = tf.import_cmd(tf_import_name, tf_import_resource,
                       capture_output=False, raise_on_error=True,
                       var=self.project_vars(),
                       var_file=self.additional_tfvar_files)
         self.post_build()
         self.print_terraform_command(tf)
+        if (return_code > 0):
+            raise Exception(return_code, "Diff in Config found:", stderr)
 
     def print_terraform_command(self, tf):
         if self.debug_print_terraform_command:

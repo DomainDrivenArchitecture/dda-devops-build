@@ -4,7 +4,7 @@
 
 ![release prod](https://github.com/DomainDrivenArchitecture/dda-devops-build/workflows/release%20prod/badge.svg)
 
-dda-devops-build provide a envioronment to tie several DevOps tools together for easy interoperation. Supported tools are:
+dda-devops-build provide a environment to tie several DevOps tools together for easy interoperation. Supported tools are:
 * aws with
   * simple api-key auth
   * mfa & assume-role auth
@@ -36,7 +36,7 @@ pip3 install boto3 mfa --user
 
 # Example Build
 
-lets assume the following poject structure
+lets assume the following project structure
 
 ```
 my-project

@@ -4,8 +4,8 @@ from pybuilder.core import task, init
 from ddadevops import *
 import logging
 
-name = 'dda-devops-build'
-MODULE = 'docker'
+name = 'devops-build'
+MODULE = 'devops-build'
 PROJECT_ROOT_PATH = '../..'
 
 

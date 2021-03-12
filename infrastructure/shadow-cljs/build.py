@@ -5,7 +5,7 @@ from ddadevops import *
 import logging
 
 name = 'shadow-cljs'
-MODULE = 'docker'
+MODULE = 'shadow-cljs'
 PROJECT_ROOT_PATH = '../..'
 
 

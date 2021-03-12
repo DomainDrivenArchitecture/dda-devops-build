@@ -70,7 +70,7 @@ class DevopsDockerBuild(DevopsBuild):
             + self.build_path() + '/image', shell=True)
 
     def drun(self):
-        run('docker run --expose 8080 -it ' +
+        run('docker run --expose 8080 -it --entrypoint="" ' +
             self.name() + ' /bin/bash', shell=True)
 
     def dockerhub_login(self):

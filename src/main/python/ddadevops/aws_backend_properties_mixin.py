@@ -24,6 +24,7 @@ class AwsBackendPropertiesMixin(DevopsTerraformBuild):
 
     def copy_build_resources_from_package(self):
         super().copy_build_resources_from_package()
+        self.copy_build_resource_file_from_package('provider_registry.tf')
         self.copy_build_resource_file_from_package('aws_provider.tf')
         self.copy_build_resource_file_from_package(
             'aws_backend_properties_vars.tf')

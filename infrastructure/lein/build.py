@@ -4,8 +4,8 @@ from pybuilder.core import task, init
 from ddadevops import *
 import logging
 
-name = 'shadow-cljs'
-MODULE = 'shadow-cljs'
+name = 'lein'
+MODULE = 'lein'
 PROJECT_ROOT_PATH = '../..'
 
 

@@ -10,7 +10,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 3.0"
     }
-  }
 
-  required_version = ">= 0.13"
+    hetznerdns = {
+      source = "timohirt/hetznerdns"
+      version = ">= 1.1.0"
+    }
+  }
 }

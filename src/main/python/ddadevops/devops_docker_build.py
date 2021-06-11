@@ -13,14 +13,16 @@ def create_devops_docker_build_config(stage,
                                       build_dir_name='target',
                                       use_package_common_files=True,
                                       build_commons_path=None,
-                                      docker_build_commons_dir_name='docker',):
+                                      docker_build_commons_dir_name='docker',
+                                      docker_publish_tag=None):
     ret = create_devops_build_config(
         stage, project_root_path, module, build_dir_name)
     ret.update({'dockerhub_user': dockerhub_user,
                 'dockerhub_password': dockerhub_password,
                 'use_package_common_files': use_package_common_files,
                 'docker_build_commons_dir_name': docker_build_commons_dir_name, 
-                'build_commons_path': build_commons_path, })
+                'build_commons_path': build_commons_path,
+                'docker_publish_tag': docker_publish_tag, })
     return ret
 
 
@@ -34,6 +36,7 @@ class DevopsDockerBuild(DevopsBuild):
         self.use_package_common_files = config['use_package_common_files']
         self.build_commons_path = config['build_commons_path']
         self.docker_build_commons_dir_name = config['docker_build_commons_dir_name']
+        self.docker_publish_tag = config['docker_publish_tag']
 
     def docker_build_commons_path(self):
         mylist = [self.build_commons_path,
@@ -54,6 +57,9 @@ class DevopsDockerBuild(DevopsBuild):
     def copy_build_resources_from_dir(self):
         run('cp -f ' + self.docker_build_commons_path() +
             '* ' + self.build_path(), shell=True)
+
+    def get_tag_from_latest_commit():
+        return run('git describe --abbrev=0 --tags', shell=True, capture_output=True).stdout.decode('UTF-8').rstrip()
 
     def initialize_build_dir(self):
         super().initialize_build_dir()
@@ -78,8 +84,13 @@ class DevopsDockerBuild(DevopsBuild):
             ' --password ' + self.dockerhub_password, shell=True)
 
     def dockerhub_publish(self):
-        run('docker tag ' + self.name() + ' ' + self.dockerhub_user +
+        if(self.docker_publish_tag):
+            run('docker tag ' + self.name() + ' ' + self.dockerhub_user +
+            '/' + self.name() + ':' + self.docker_publish_tag, shell=True)
+        else:
+            run('docker tag ' + self.name() + ' ' + self.dockerhub_user +
             '/' + self.name(), shell=True)
+        
         run('docker push ' + self.dockerhub_user +
             '/' + self.name(), shell=True)
 

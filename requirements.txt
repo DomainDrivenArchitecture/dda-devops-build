@@ -1,4 +1,3 @@
-pybuilder 
-ddadevops 
+pybuilder  
 deprecation
 setuptools

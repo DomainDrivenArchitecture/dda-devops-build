@@ -172,6 +172,19 @@ class DevopsTerraformBuild(DevopsBuild):
         if (return_code > 0):
             raise Exception(return_code, "terraform error:", stderr)
 
+    def refresh(self, auto_approve=True):
+        tf = self.init_client()
+        return_code, stdout, stderr = tf.apply(capture_output=False, raise_on_error=True,
+                 refresh_only=IsFlagged, 
+                 skip_plan=auto_approve,
+                 var=self.project_vars(),
+                 var_file=self.additional_tfvar_files)
+        self.write_output(tf)
+        self.post_build()
+        self.print_terraform_command(tf)
+        if (return_code > 0):
+            raise Exception(return_code, "terraform error:", stderr)
+
     def destroy(self, auto_approve=False):
         tf = self.init_client()
         if auto_approve:

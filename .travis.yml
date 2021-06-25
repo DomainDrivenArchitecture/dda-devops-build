@@ -1,7 +1,0 @@
-
-language: python
-python:
-  - "3.7"
-before_script: sudo apt-get install pychecker
-install: pip install pybuilder
-script: pyb clean install_dependencies publish

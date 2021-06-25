@@ -5,7 +5,6 @@ from pkg_resources import *
 from python_terraform import *
 from .python_util import filter_none
 from .devops_build import DevopsBuild, create_devops_build_config
-from typing import Optional
 import sys
 
 
@@ -32,50 +31,6 @@ def create_devops_terraform_build_config(stage,
                 'debug_print_terraform_command': debug_print_terraform_command,
                 'additional_tfvar_files': additional_tfvar_files})
     return ret
-
-
-class WorkaroundTerraform(Terraform):
-    def __init__(self, working_dir=None,
-                 targets=None,
-                 state=None,
-                 variables=None,
-                 parallelism=None,
-                 var_file=None,
-                 terraform_bin_path=None,
-                 is_env_vars_included=True,
-                 ):
-        super().__init__(working_dir, targets, state, variables, parallelism,
-                         var_file,  terraform_bin_path, is_env_vars_included)
-        self.latest_cmd = ''
-
-    def refresh(
-        self,
-        dir_or_plan: Optional[str] = None,
-        input: bool = False,
-        no_color: Type[TerraformFlag] = IsFlagged,
-        **kwargs,
-    ) -> CommandOutput:
-        """Refer to https://terraform.io/docs/commands/refresh.html
-
-        no-color is flagged by default
-        :param no_color: disable color of stdout
-        :param input: disable prompt for a missing variable
-        :param dir_or_plan: folder relative to working folder
-        :param kwargs: same as kwags in method 'cmd'
-        :returns return_code, stdout, stderr
-        """
-        default = kwargs.copy()
-        default["input"] = input
-        default["no_color"] = no_color
-        option_dict = self._generate_default_options(default)
-        args = self._generate_default_args(dir_or_plan)
-        return self.cmd("refresh", *args, **option_dict)
-
-    def generate_cmd_string(self, cmd, *args, **kwargs):
-        result = super().generate_cmd_string(cmd, *args, **kwargs)
-        self.latest_cmd = ' '.join(result)
-        return result
-
 
 class DevopsTerraformBuild(DevopsBuild):
 
@@ -140,7 +95,7 @@ class DevopsTerraformBuild(DevopsBuild):
         self.rescue_local_state()
         
     def init_client(self):
-        tf = WorkaroundTerraform(working_dir=self.build_path())
+        tf = Terraform(working_dir=self.build_path())
         tf.init()
         self.print_terraform_command(tf)
         if self.use_workspace:

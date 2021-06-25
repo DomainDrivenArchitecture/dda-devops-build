@@ -25,7 +25,7 @@ pip3 install pybuilder ddadevops deprecation --user
 export PATH=$PATH:~/.local/bin
 
 # in case of using terraform
-pip3 install python-terraform --user
+pip3 install dda-python-terraform --user
 
 # in case of using AwsMixin
 pip3 install boto3 --user

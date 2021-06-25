@@ -47,6 +47,29 @@ class WorkaroundTerraform(Terraform):
                          var_file,  terraform_bin_path, is_env_vars_included)
         self.latest_cmd = ''
 
+    def refresh(
+        self,
+        dir_or_plan: Optional[str] = None,
+        input: bool = False,
+        no_color: Type[TerraformFlag] = IsFlagged,
+        **kwargs,
+    ) -> CommandOutput:
+        """Refer to https://terraform.io/docs/commands/refresh.html
+
+        no-color is flagged by default
+        :param no_color: disable color of stdout
+        :param input: disable prompt for a missing variable
+        :param dir_or_plan: folder relative to working folder
+        :param kwargs: same as kwags in method 'cmd'
+        :returns return_code, stdout, stderr
+        """
+        default = kwargs.copy()
+        default["input"] = input
+        default["no_color"] = no_color
+        option_dict = self._generate_default_options(default)
+        args = self._generate_default_args(dir_or_plan)
+        return self.cmd("refresh", *args, **option_dict)
+
     def generate_cmd_string(self, cmd, *args, **kwargs):
         result = super().generate_cmd_string(cmd, *args, **kwargs)
         self.latest_cmd = ' '.join(result)
@@ -174,11 +197,9 @@ class DevopsTerraformBuild(DevopsBuild):
 
     def refresh(self, auto_approve=True):
         tf = self.init_client()
-        return_code, stdout, stderr = tf.apply(capture_output=False, raise_on_error=True,
-                 refresh_only=IsFlagged, 
-                 skip_plan=auto_approve,
-                 var=self.project_vars(),
-                 var_file=self.additional_tfvar_files)
+        return_code, stdout, stderr = tf.refresh(
+                var=self.project_vars(),
+                var_file=self.additional_tfvar_files)
         self.write_output(tf)
         self.post_build()
         self.print_terraform_command(tf)

@@ -1,5 +1,5 @@
 from python_terraform import *
-from .devops_terraform_build import DevopsTerraformBuild, WorkaroundTerraform
+from .devops_terraform_build import DevopsTerraformBuild, Terraform
 
 
 def add_aws_backend_properties_mixin_config(config, account_name):

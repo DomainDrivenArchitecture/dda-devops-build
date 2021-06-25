@@ -86,12 +86,9 @@ class DevopsDockerBuild(DevopsBuild):
             '/' + self.name() + ':' + self.docker_publish_tag, shell=True)
             run('docker push ' + self.dockerhub_user +
             '/' + self.name() + ':' + self.docker_publish_tag, shell=True)
-        else:
-            run('docker tag ' + self.name() + ' ' + self.dockerhub_user +
-            '/' + self.name(), shell=True)
 
         run('docker push ' + self.dockerhub_user +
-            '/' + self.name(), shell=True)
+        '/' + self.name(), shell=True)
 
     def test(self):
         run('docker build -t ' + self.name() + '-test ' +

@@ -228,7 +228,6 @@ git push
 pip3 install --upgrade --user ddadevops
 ```
 
-
 # License
 
 Copyright © 2019 meissa GmbH

@@ -58,9 +58,6 @@ class DevopsDockerBuild(DevopsBuild):
         run('cp -f ' + self.docker_build_commons_path() +
             '* ' + self.build_path(), shell=True)
 
-    def get_tag_from_latest_commit():
-        return run('git describe --abbrev=0 --tags', shell=True, capture_output=True).stdout.decode('UTF-8').rstrip()
-
     def initialize_build_dir(self):
         super().initialize_build_dir()
         if self.use_package_common_files:

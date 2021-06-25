@@ -81,7 +81,7 @@ class DevopsDockerBuild(DevopsBuild):
             ' --password ' + self.dockerhub_password, shell=True)
 
     def dockerhub_publish(self):
-        if(self.docker_publish_tag):
+        if(self.docker_publish_tag is not None):
             run('docker tag ' + self.name() + ' ' + self.dockerhub_user +
             '/' + self.name() + ':' + self.docker_publish_tag, shell=True)
         else:

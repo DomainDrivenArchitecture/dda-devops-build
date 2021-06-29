@@ -230,5 +230,5 @@ pip3 install --upgrade --user ddadevops
 
 # License
 
-Copyright © 2019 meissa GmbH
+Copyright © 2021 meissa GmbH
 Licensed under the [Apache License, Version 2.0](LICENSE) (the "License")

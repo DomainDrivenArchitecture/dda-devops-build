@@ -13,7 +13,7 @@ def get_devops_build(project):
     return project.get_property('devops_build')
 
 def get_tag_from_latest_commit():
-        return run('git describe --abbrev=0 --tags', shell=True, capture_output=True).stdout.decode('UTF-8').rstrip()
+        return run('git describe --abbrev=0 --tags --exact-match', shell=True, capture_output=True).stdout.decode('UTF-8').rstrip()
 
 class DevopsBuild:
 

@@ -38,7 +38,7 @@ class AwsBackendPropertiesMixin(DevopsTerraformBuild):
         pass
 
     def init_client(self):
-        tf = WorkaroundTerraform(working_dir=self.build_path())
+        tf = Terraform(working_dir=self.build_path())
         tf.init(backend_config=self.backend_config)
         self.print_terraform_command(tf)
         if self.use_workspace:

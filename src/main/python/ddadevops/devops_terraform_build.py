@@ -190,5 +190,5 @@ class DevopsTerraformBuild(DevopsBuild):
 
     def print_terraform_command(self, tf):
         if self.debug_print_terraform_command:
-            output = 'cd ' + self.build_path() + ' && ' + tf.latest_cmd
+            output = 'cd ' + self.build_path() + ' && ' + tf.latest_cmd()
             print(output)

@@ -18,6 +18,8 @@ dda-devops-build provide a environment to tie several DevOps tools together for 
 
 # Setup
 
+Ensure that yout python3 version is at least Python 3.7!
+
 ```
 sudo apt install python3-pip
 pip3 install pip3 --upgrade --user

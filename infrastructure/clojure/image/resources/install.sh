@@ -10,16 +10,19 @@ function main() {
     # shadow-cljs
     npm install -g --save-dev shadow-cljs
 
-    # kubeconform & graalvm
+    # download kubeconform & graalvm
     curl -Lo /tmp/kubeconform-v0.4.7.tar.gz https://github.com/yannh/kubeconform/releases/download/v0.4.7/kubeconform-linux-amd64.tar.gz
     curl -Lo /tmp/graalvm-ce-java11-linux-amd64-21.2.0.tar.gz https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-21.2.0/graalvm-ce-java11-linux-amd64-21.2.0.tar.gz
 
+    # checksum
     cd /tmp
     sha256sum --check CHECKSUMS
 
+    # install kubeconform
     tar -xf /tmp/kubeconform-v0.4.7.tar.gz
     cp kubeconform /usr/local/bin
 
+    # install graalvm
     tar -xzf graalvm-ce-java11-linux-amd64-21.2.0.tar.gz
     mv graalvm-ce-java11-21.2.0 /usr/lib/jvm/
     ln -s /usr/lib/jvm/graalvm-ce-java11-21.2.0 /usr/lib/jvm/graalvm
@@ -29,6 +32,9 @@ function main() {
 
     gu install native-image
     ln -s /usr/lib/jvm/graalvm/bin/native-image /usr/local/bin
+
+    #install lein
+    /tmp/lein.sh
 
     cleanupDocker
 }

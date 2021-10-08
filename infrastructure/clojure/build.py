@@ -14,7 +14,7 @@ class MyBuild(DevopsDockerBuild):
 
 @init
 def initialize(project):
-    project.build_depends_on('ddadevops>=0.8.19')
+    project.build_depends_on('ddadevops>=0.13.0')
     stage = 'notused'
     dockerhub_user = gopass_field_from_path('meissa/web/docker.com', 'login')
     dockerhub_password = gopass_password_from_path('meissa/web/docker.com')

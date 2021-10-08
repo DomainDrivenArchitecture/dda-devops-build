@@ -111,7 +111,7 @@ class DevopsTerraformBuild(DevopsBuild):
         result = tf.output(json=IsFlagged)
         self.print_terraform_command(tf)
         with open(self.build_path() + self.output_json_name, "w") as output_file:
-            output_file.write(json.dumps(result))
+            output_file.write(dumps(result))
 
     def read_output_json(self):
         with open(self.build_path() + self.output_json_name, 'r') as f:

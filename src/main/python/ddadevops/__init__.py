@@ -9,6 +9,7 @@ from .devops_build import DevopsBuild, create_devops_build_config, get_devops_bu
 from .devops_terraform_build import DevopsTerraformBuild, create_devops_terraform_build_config
 from .devops_docker_build import DevopsDockerBuild, create_devops_docker_build_config
 from .hetzner_mixin import HetznerMixin, add_hetzner_mixin_config
+from .exoscale_mixin import ExoscaleMixin, add_exoscale_mixin_config
 from .aws_backend_properties_mixin import AwsBackendPropertiesMixin, add_aws_backend_properties_mixin_config
 from .aws_mfa_mixin import AwsMfaMixin, add_aws_mfa_mixin_config
 from .aws_rds_pg_mixin import AwsRdsPgMixin, add_aws_rds_pg_mixin_config

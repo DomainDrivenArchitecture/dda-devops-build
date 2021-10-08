@@ -1,8 +1,13 @@
 terraform {
   required_providers {
+
+    exoscale = {
+      source  = "exoscale/exoscale"
+      version = ">= 0.29.0"
+    }
      
     hcloud = {
-      source = "hetznercloud/hcloud" # this whole block is important
+      source = "hetznercloud/hcloud"
       version = ">= 1.23.0"
     }
 

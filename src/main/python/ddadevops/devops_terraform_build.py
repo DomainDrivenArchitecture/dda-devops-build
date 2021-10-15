@@ -20,7 +20,7 @@ def create_devops_terraform_build_config(stage,
                                          terraform_build_commons_dir_name='terraform',
                                          debug_print_terraform_command=False,
                                          additional_tfvar_files=[],
-                                         terraform_version=1.0):
+                                         terraform_version=0.15):
     ret = create_devops_build_config(
         stage, project_root_path, module, build_dir_name)
     ret.update({'additional_vars': additional_vars,
@@ -30,7 +30,7 @@ def create_devops_terraform_build_config(stage,
                 'build_commons_path': build_commons_path,
                 'terraform_build_commons_dir_name': terraform_build_commons_dir_name,
                 'debug_print_terraform_command': debug_print_terraform_command,
-                'additional_tfvar_files': additional_tfvar_files
+                'additional_tfvar_files': additional_tfvar_files,
                 'terraform_version': terraform_version})
     return ret
 
@@ -144,10 +144,20 @@ class DevopsTerraformBuild(DevopsBuild):
 
     def apply(self, auto_approve=False):
         tf = self.init_client()
-        return_code, stdout, stderr = tf.apply(capture_output=False, raise_on_error=True,
-                 skip_plan=auto_approve,
-                 var=self.project_vars(),
-                 var_file=self.additional_tfvar_files)
+        if auto_approve:
+            auto_approve_flag = IsFlagged
+        else:
+            auto_approve_flag = None
+        if self.terraform_version >= 1.0:
+            return_code, stdout, stderr = tf.apply(capture_output=False, raise_on_error=True,
+                    auto_approve=auto_approve_flag,
+                    var=self.project_vars(),
+                    var_file=self.additional_tfvar_files)
+        else:
+            return_code, stdout, stderr = tf.apply(capture_output=False, raise_on_error=True,
+                    skip_plan=auto_approve,
+                    var=self.project_vars(),
+                    var_file=self.additional_tfvar_files)
         self.write_output(tf)
         self.post_build()
         self.print_terraform_command(tf)
@@ -168,17 +178,17 @@ class DevopsTerraformBuild(DevopsBuild):
     def destroy(self, auto_approve=False):
         tf = self.init_client()
         if auto_approve:
-            force = IsFlagged
+            auto_approve_flag = IsFlagged
         else:
-            force = None
-        if self.terraform_version <= 1.0:
+            auto_approve_flag = None
+        if self.terraform_version >= 1.0:
             return_code, stdout, stderr = tf.destroy(capture_output=False, raise_on_error=True,
-                    auto_approve=force,
+                    auto_approve=auto_approve_flag,
                     var=self.project_vars(),
                     var_file=self.additional_tfvar_files)
         else:
             return_code, stdout, stderr = tf.destroy(capture_output=False, raise_on_error=True,
-                    force=force,
+                    force=auto_approve_flag,
                     var=self.project_vars(),
                     var_file=self.additional_tfvar_files)
         self.post_build()

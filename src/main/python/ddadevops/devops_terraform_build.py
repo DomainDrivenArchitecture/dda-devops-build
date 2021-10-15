@@ -19,7 +19,8 @@ def create_devops_terraform_build_config(stage,
                                          build_commons_path=None,
                                          terraform_build_commons_dir_name='terraform',
                                          debug_print_terraform_command=False,
-                                         additional_tfvar_files=[]):
+                                         additional_tfvar_files=[],
+                                         terraform_version=1.0):
     ret = create_devops_build_config(
         stage, project_root_path, module, build_dir_name)
     ret.update({'additional_vars': additional_vars,
@@ -29,7 +30,8 @@ def create_devops_terraform_build_config(stage,
                 'build_commons_path': build_commons_path,
                 'terraform_build_commons_dir_name': terraform_build_commons_dir_name,
                 'debug_print_terraform_command': debug_print_terraform_command,
-                'additional_tfvar_files': additional_tfvar_files})
+                'additional_tfvar_files': additional_tfvar_files
+                'terraform_version': terraform_version})
     return ret
 
 class DevopsTerraformBuild(DevopsBuild):
@@ -45,6 +47,7 @@ class DevopsTerraformBuild(DevopsBuild):
         self.terraform_build_commons_dir_name = config['terraform_build_commons_dir_name']
         self.debug_print_terraform_command = config['debug_print_terraform_command']
         self.additional_tfvar_files = config['additional_tfvar_files']
+        self.terraform_version = config['terraform_version']
 
     def terraform_build_commons_path(self):
         mylist = [self.build_commons_path,
@@ -168,10 +171,16 @@ class DevopsTerraformBuild(DevopsBuild):
             force = IsFlagged
         else:
             force = None
-        return_code, stdout, stderr = tf.destroy(capture_output=False, raise_on_error=True,
-                   force=force,
-                   var=self.project_vars(),
-                   var_file=self.additional_tfvar_files)
+        if self.terraform_version <= 1.0:
+            return_code, stdout, stderr = tf.destroy(capture_output=False, raise_on_error=True,
+                    auto_approve=force,
+                    var=self.project_vars(),
+                    var_file=self.additional_tfvar_files)
+        else:
+            return_code, stdout, stderr = tf.destroy(capture_output=False, raise_on_error=True,
+                    force=force,
+                    var=self.project_vars(),
+                    var_file=self.additional_tfvar_files)
         self.post_build()
         self.print_terraform_command(tf)
         if (return_code > 0):

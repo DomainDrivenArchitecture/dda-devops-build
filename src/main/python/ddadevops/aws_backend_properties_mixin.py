@@ -43,7 +43,7 @@ class AwsBackendPropertiesMixin(DevopsTerraformBuild):
         self.print_terraform_command(tf)
         if self.use_workspace:
             try:
-                tf.workspace('select', slef.stage)
+                tf.workspace('select', self.stage)
                 self.print_terraform_command(tf)
             except:
                 tf.workspace('new', self.stage)

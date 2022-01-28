@@ -98,7 +98,7 @@ class DevopsTerraformBuild(DevopsBuild):
         self.rescue_local_state()
         
     def init_client(self):
-        tf = Terraform(working_dir=self.build_path())
+        tf = Terraform(working_dir=self.build_path(), terraform_version=self.terraform_version)
         tf.init()
         self.print_terraform_command(tf)
         if self.use_workspace:

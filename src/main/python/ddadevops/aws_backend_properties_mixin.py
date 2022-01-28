@@ -1,4 +1,4 @@
-from python_terraform import *
+from dda_python_terraform import *
 from .devops_terraform_build import DevopsTerraformBuild, Terraform
 
 

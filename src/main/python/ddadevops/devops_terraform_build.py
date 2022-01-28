@@ -2,7 +2,7 @@ from os import path
 from json import load, dumps
 from subprocess import run
 from pkg_resources import *
-from python_terraform import *
+from dda_python_terraform import *
 from .python_util import filter_none
 from .devops_build import DevopsBuild, create_devops_build_config
 import sys
@@ -38,7 +38,7 @@ class DevopsTerraformBuild(DevopsBuild):
 
     def __init__(self, project, config):
         super().__init__(project, config)
-        project.build_depends_on('python-terraform')
+        project.build_depends_on('dda-python-terraform')
         self.additional_vars = config['additional_vars']
         self.output_json_name = config['output_json_name']
         self.use_workspace = config['use_workspace']

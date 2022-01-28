@@ -1,4 +1,4 @@
-from python_terraform import *
+from dda_python_terraform import *
 from boto3 import *
 from .python_util import execute
 from .aws_backend_properties_mixin import AwsBackendPropertiesMixin

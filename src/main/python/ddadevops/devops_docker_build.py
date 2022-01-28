@@ -30,7 +30,7 @@ class DevopsDockerBuild(DevopsBuild):
 
     def __init__(self, project, config):
         super().__init__(project, config)
-        project.build_depends_on('python-terraform')
+        project.build_depends_on('dda-python-terraform')
         self.dockerhub_user = config['dockerhub_user']
         self.dockerhub_password = config['dockerhub_password']
         self.use_package_common_files = config['use_package_common_files']

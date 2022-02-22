@@ -1,0 +1,46 @@
+image: "python:3.8"
+
+before_script:
+  - python --version
+  - pip install setuptools wheel twine
+  - pip install .
+  
+stages:
+  - lint
+  - upload
+
+flake8:
+  stage: lint
+  allow_failure: true
+  script:
+  - flake8 --max-line-length=120 --count --select=E9,F63,F7,F82 --show-source --statistics src/python/ddadevops/*.py
+  - flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/python/ddadevops/*.py
+
+mypy:
+  stage: lint
+  allow_failure: true
+  script:
+  - python -m mypy src/python/ddadevops/*.py
+  - python -m mypy src/python/ddadevops/*.py
+
+pylint:
+  stage: lint
+  allow_failure: true
+  script:
+  - pylint -d C0301 src/python/ddadevops/*.py
+
+pypi-dev:
+  stage: upload
+  rules:
+    - if: '$CI_COMMIT_TAG !~ /^release-.*$/'
+  script:
+    - pip install -r requirements.txt
+    - pyb publish upload
+
+pypi-stable:
+  stage: upload
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^release-.*$/'
+  script:
+    - pip install -r requirements.txt
+    - pyb -P version=${{ github.ref }} publish upload

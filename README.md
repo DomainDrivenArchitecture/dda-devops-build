@@ -1,4 +1,6 @@
-# dda-devops-build
+# dda-devops-build has moved to https://gitlab.com/domaindrivenarchitecture/dda-devops-build
+
+Will not be maintained any longer on GitHub.
 
 [![Slack](https://img.shields.io/badge/chat-clojurians-green.svg?style=flat)](https://clojurians.slack.com/messages/#dda-pallet/) | [<img src="https://meissa-gmbh.de/img/community/Mastodon_Logotype.svg" width=20 alt="team@social.meissa-gmbh.de"> team@social.meissa-gmbh.de](https://social.meissa-gmbh.de/@team) | [Website & Blog](https://domaindrivenarchitecture.org)
 
